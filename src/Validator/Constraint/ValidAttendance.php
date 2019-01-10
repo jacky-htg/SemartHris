@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KejawenLab\Application\SemartHris\Validator\Constraint;
 
 use KejawenLab\Application\SemartHris\Validator\ValidAttendanceValidator;
@@ -8,7 +10,7 @@ use Symfony\Component\Validator\Constraint;
 /**
  * @Annotation
  *
- * @author Muhamad Surya Iksanudin <surya.iksanudin@kejawenlab.com>
+ * @author Muhamad Surya Iksanudin <surya.iksanudin@gmail.com>
  */
 class ValidAttendance extends Constraint
 {

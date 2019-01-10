@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KejawenLab\Application\SemartHris\Repository;
 
 use KejawenLab\Application\SemartHris\Component\Holiday\Model\HolidayInterface;
 use KejawenLab\Application\SemartHris\Component\Holiday\Repository\HolidayRepositoryInterface;
 
 /**
- * @author Muhamad Surya Iksanudin <surya.iksanudin@kejawenlab.com>
+ * @author Muhamad Surya Iksanudin <surya.iksanudin@gmail.com>
  */
 class HolidayRepository extends Repository implements HolidayRepositoryInterface
 {

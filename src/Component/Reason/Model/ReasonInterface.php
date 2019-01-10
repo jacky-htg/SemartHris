@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KejawenLab\Application\SemartHris\Component\Reason\Model;
 
 use KejawenLab\Application\SemartHris\Component\Reason\ReasonType;
 
 /**
- * @author Muhamad Surya Iksanudin <surya.iksanudin@kejawenlab.com>
+ * @author Muhamad Surya Iksanudin <surya.iksanudin@gmail.com>
  */
 interface ReasonInterface
 {

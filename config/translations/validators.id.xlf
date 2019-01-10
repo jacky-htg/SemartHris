@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <file source-language="en" target-language="en" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="semarthris.contract.already_used">
+                <source>semarthris.contract.already_used</source>
+                <target>Kontrak telah digunakan</target>
+            </trans-unit>
+            <trans-unit id="semarthris.same_job">
+                <source>semarthris.same_job</source>
+                <target>Karyawan tidak mengalami perubahan apapun</target>
+            </trans-unit>
+            <trans-unit id="semarthris.same_tax">
+                <source>semarthris.same_tax</source>
+                <target>Tidak ada perubahan pajak sama sekali</target>
+            </trans-unit>
+            <trans-unit id="semarthris.attendance.invalid_data">
+                <source>semarthris.attendance.invalid_data</source>
+                <target>Data absensi tidak valid</target>
+            </trans-unit>
+            <trans-unit id="semarthris.field_required">
+                <source>semarthris.field_required</source>
+                <target>Field ini wajib diisi</target>
+            </trans-unit>
+            <trans-unit id="semarthris.benefit.employee_has_payroll">
+                <source>semarthris.benefit.employee_has_payroll</source>
+                <target>Karyawan telah memiliki payroll. Gunakan menu perubahan gaji/tunjangan untuk merubah setting gaji.</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

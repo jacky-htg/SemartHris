@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KejawenLab\Application\SemartHris\Component\Company\Repository;
 
 use KejawenLab\Application\SemartHris\Component\Company\Model\DepartmentInterface;
 
 /**
- * @author Muhamad Surya Iksanudin <surya.iksanudin@kejawenlab.com>
+ * @author Muhamad Surya Iksanudin <surya.iksanudin@gmail.com>
  */
 interface DepartmentRepositoryInterface
 {
@@ -21,5 +23,5 @@ interface DepartmentRepositoryInterface
      *
      * @return DepartmentInterface
      */
-    public function find(string $id): ? DepartmentInterface;
+    public function find(?string $id): ? DepartmentInterface;
 }

@@ -1,12 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KejawenLab\Application\SemartHris\Component\Address\Service;
 
+use Doctrine\Common\Util\ClassUtils;
 use KejawenLab\Application\SemartHris\Component\Address\Model\AddressInterface;
 use KejawenLab\Application\SemartHris\Component\Address\Repository\AddressRepositoryFactory;
 
 /**
- * @author Muhamad Surya Iksanudin <surya.iksanudin@kejawenlab.com>
+ * @author Muhamad Surya Iksanudin <surya.iksanudin@gmail.com>
  */
 class DefaultAddressChecker
 {
@@ -32,13 +35,15 @@ class DefaultAddressChecker
             return;
         }
 
-        $repository = $this->addressRepositoryFactory->getRepositoryFor(get_class($address));
+        $realClass = ClassUtils::getRealClass(get_class($address));
+        $repository = $this->addressRepositoryFactory->getRepositoryFor($realClass);
         $repository->unsetDefaultExcept($address);
 
         $addressable = $address->getAddressable();
-        $addressable->setAddress($address);
-
-        $repository->apply($addressable);
+        if ($addressable) {
+            $addressable->setAddress($address);
+            $repository->apply($addressable);
+        }
     }
 
     /**
@@ -46,7 +51,8 @@ class DefaultAddressChecker
      */
     public function setRandomDefault(AddressInterface $address): void
     {
-        $repository = $this->addressRepositoryFactory->getRepositoryFor(get_class($address));
+        $realClass = ClassUtils::getRealClass(get_class($address));
+        $repository = $this->addressRepositoryFactory->getRepositoryFor($realClass);
         $newDefault = $repository->setRandomDefault();
 
         $addressable = $address->getAddressable();

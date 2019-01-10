@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KejawenLab\Application\SemartHris\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -30,7 +32,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @Gedmo\SoftDeleteable(fieldName="deletedAt")
  *
- * @author Muhamad Surya Iksanudin <surya.iksanudin@kejawenlab.id>
+ * @author Muhamad Surya Iksanudin <surya.iksanudin@gmail.com>
  */
 class Overtime implements OvertimeInterface
 {
@@ -111,6 +113,15 @@ class Overtime implements OvertimeInterface
      *
      * @var float
      */
+    private $rawValue;
+
+    /**
+     * @Groups({"read"})
+     *
+     * @ORM\Column(type="float", scale=27, precision=2)
+     *
+     * @var float
+     */
     private $calculatedValue;
 
     /**
@@ -176,7 +187,7 @@ class Overtime implements OvertimeInterface
     /**
      * @param EmployeeInterface|null $employee
      */
-    public function setEmployee(EmployeeInterface $employee = null): void
+    public function setEmployee(?EmployeeInterface $employee): void
     {
         $this->employee = $employee;
     }
@@ -192,7 +203,7 @@ class Overtime implements OvertimeInterface
     /**
      * @param ShiftmentInterface|null $shiftment
      */
-    public function setShiftment(ShiftmentInterface $shiftment = null): void
+    public function setShiftment(?ShiftmentInterface $shiftment): void
     {
         $this->shiftment = $shiftment;
     }
@@ -208,7 +219,7 @@ class Overtime implements OvertimeInterface
     /**
      * @param \DateTimeInterface|null $overtimeDate
      */
-    public function setOvertimeDate(\DateTimeInterface $overtimeDate = null): void
+    public function setOvertimeDate(?\DateTimeInterface $overtimeDate): void
     {
         $this->overtimeDate = $overtimeDate;
     }
@@ -224,7 +235,7 @@ class Overtime implements OvertimeInterface
     /**
      * @param \DateTimeInterface|null $startHour
      */
-    public function setStartHour(\DateTimeInterface $startHour = null): void
+    public function setStartHour(?\DateTimeInterface $startHour): void
     {
         $this->startHour = $startHour;
     }
@@ -240,7 +251,7 @@ class Overtime implements OvertimeInterface
     /**
      * @param \DateTimeInterface|null $endHour
      */
-    public function setEndHour(\DateTimeInterface $endHour = null): void
+    public function setEndHour(?\DateTimeInterface $endHour): void
     {
         $this->endHour = $endHour;
     }
@@ -259,6 +270,22 @@ class Overtime implements OvertimeInterface
     public function setCalculatedValue(float $calculatedValue): void
     {
         $this->calculatedValue = $calculatedValue;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getRawValue(): ? float
+    {
+        return (float) $this->rawValue ?? 0;
+    }
+
+    /**
+     * @param float $rawValue
+     */
+    public function setRawValue(float $rawValue): void
+    {
+        $this->rawValue = $rawValue;
     }
 
     /**
@@ -325,7 +352,7 @@ class Overtime implements OvertimeInterface
     /**
      * @param EmployeeInterface|null $approvedBy
      */
-    public function setApprovedBy(EmployeeInterface $approvedBy = null): void
+    public function setApprovedBy(?EmployeeInterface $approvedBy): void
     {
         $this->approvedBy = $approvedBy;
     }
@@ -339,9 +366,9 @@ class Overtime implements OvertimeInterface
     }
 
     /**
-     * @param string $description
+     * @param string|null $description
      */
-    public function setDescription(string $description): void
+    public function setDescription(?string $description): void
     {
         $this->description = $description;
     }

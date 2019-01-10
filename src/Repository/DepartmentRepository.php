@@ -1,13 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KejawenLab\Application\SemartHris\Repository;
 
 use KejawenLab\Application\SemartHris\Component\Company\Model\DepartmentInterface;
 use KejawenLab\Application\SemartHris\Component\Company\Repository\DepartmentRepositoryInterface;
 use KejawenLab\Application\SemartHris\Entity\CompanyDepartment;
+use KejawenLab\Application\SemartHris\Util\UuidUtil;
 
 /**
- * @author Muhamad Surya Iksanudin <surya.iksanudin@kejawenlab.com>
+ * @author Muhamad Surya Iksanudin <surya.iksanudin@gmail.com>
  */
 class DepartmentRepository extends Repository implements DepartmentRepositoryInterface
 {
@@ -16,9 +19,9 @@ class DepartmentRepository extends Repository implements DepartmentRepositoryInt
      *
      * @return DepartmentInterface
      */
-    public function find(string $id): ? DepartmentInterface
+    public function find(?string $id): ? DepartmentInterface
     {
-        return $this->entityManager->getRepository($this->entityClass)->find($id);
+        return $this->doFind($id);
     }
 
     /**
@@ -28,6 +31,10 @@ class DepartmentRepository extends Repository implements DepartmentRepositoryInt
      */
     public function findByCompany(string $companyId): array
     {
+        if (!$companyId || !UuidUtil::isValid($companyId)) {
+            return [];
+        }
+
         $queryBuilder = $this->entityManager->createQueryBuilder();
         $queryBuilder->select('o');
         $queryBuilder->from(CompanyDepartment::class, 'o');

@@ -1,10 +1,9 @@
 easy_admin:
     entities:
-        Component:
-            role: 'ROLE_HRSTAFF'
-            class: 'KejawenLab\Application\SemartHris\Entity\Component'
+        SalaryComponent:
+            role: '%env(string:SEMART_SECURITY_PAYROLL_MENU)%'
+            class: 'KejawenLab\Application\SemartHris\Entity\SalaryComponent'
             controller: 'KejawenLab\Application\SemartHris\Controller\Admin\AdminController'
-            disabled_actions: ['show']
             templates:
                 new: 'app/reason/new.html.twig'
                 edit: 'app/reason/edit.html.twig'
@@ -19,15 +18,98 @@ easy_admin:
                 fields:
                     - { type: 'group', css_class: 'col-sm-6' }
                     - { property: 'code', label: 'Kode Komponen Gaji' }
-                    - { property: 'state', label: 'Tipe', type: 'choice', type_options: { attr: { class: 'static-select' }, choices: { 'label.form.empty_value': '', 'TUNJANGAN': 'p', 'POTONGAN': 'm' } } }
+                    - { property: 'state', label: 'Tipe', type: 'choice', type_options: { attr: { class: 'static-select' }, choices: { 'label.form.empty_value': '', 'PEMASUKAN': 'p', 'POTONGAN': 'm' } } }
                     - { type: 'group', css_class: 'col-sm-6' }
                     - { property: 'name', label: 'Komponen Gaji' }
-                    - { property: 'fixed', label: 'Tunjangan/Potongan Tetap?' }
+                    - { property: 'fixed', label: 'Tetap?' }
+            show:
+                title: 'Detil Komponen Gaji'
+                fields:
+                    - { property: 'code', label: 'Kode Komponen' }
+                    - { property: 'state_text', label: 'Tipe Komponen' }
+                    - { property: 'name', label: 'Komponen Gaji' }
+                    - { property: 'fixed', label: 'Tetap?' }
             list:
-                role: 'ROLE_HRSTAFF'
+                role: '%env(string:SEMART_SECURITY_PAYROLL_MENU)%'
                 title: 'Komponen Gaji'
                 fields:
                     - { property: 'code', label: 'Kode Komponen' }
                     - { property: 'state_text', label: 'Tipe Komponen' }
                     - { property: 'name', label: 'Komponen Gaji' }
                     - { property: 'fixed', label: 'Tetap?' }
+
+        SalaryAllowancePlus:
+            role: '%env(string:SEMART_SECURITY_PAYROLL_MENU)%'
+            class: 'KejawenLab\Application\SemartHris\Entity\SalaryAllowance'
+            controller: 'KejawenLab\Application\SemartHris\Controller\Admin\SalaryAllowanceController'
+            disabled_actions: ['search', 'show']
+            templates:
+                new: 'app/allowance/new.html.twig'
+                edit: 'app/allowance/edit.html.twig'
+                list: 'app/allowance/list.html.twig'
+            new:
+                title: 'Tambah Tunjangan'
+            edit:
+                title: 'Edit Tunjangan'
+            search:
+                title: 'Tunjangan'
+            form:
+                fields:
+                    - { type: 'group', css_class: 'col-sm-6' }
+                    - { property: 'year', label: 'Tahun', type: 'KejawenLab\Application\SemartHris\Form\Type\YearType', type_options: { attr: { class: 'static-select' } } }
+                    - { property: 'month', label: 'Bulan', type: 'KejawenLab\Application\SemartHris\Form\Type\MonthType', type_options: { attr: { class: 'static-select' } } }
+                    - { type: 'group', css_class: 'col-sm-6' }
+                    - { property: 'employee', label: 'Karyawan' }
+                    - { property: 'component', type: 'hidden', type_options: { attr: { class: 'component-id' } } }
+                    - { property: 'component_text', label: 'Komponen', type: 'choice', type_options: { required: true, attr: { class: 'component-select' }, mapped: false, choices: { 'label.form.empty_value': '' } } }
+                    - { type: 'group', css_class: 'col-sm-12' }
+                    - { property: 'benefitValue', label: 'Nilai', type: 'text' }
+            show:
+                title: 'Detil Tunjangan'
+            list:
+                role: '%env(string:SEMART_SECURITY_PAYROLL_MENU)%'
+                title: 'Tunjangan'
+                fields:
+                    - { property: 'year', label: 'Tahun', type: 'text' }
+                    - { property: 'month', label: 'Bulan', template: 'app/default/field_month.html.twig' }
+                    - { property: 'employee', label: 'Karyawan' }
+                    - { property: 'component', label: 'Tunjangan' }
+                    - { property: 'benefitValue', label: 'Nilai' }
+
+        SalaryAllowanceMinus:
+            role: '%env(string:SEMART_SECURITY_PAYROLL_MENU)%'
+            class: 'KejawenLab\Application\SemartHris\Entity\SalaryAllowance'
+            controller: 'KejawenLab\Application\SemartHris\Controller\Admin\SalaryAllowanceController'
+            disabled_actions: ['search', 'show']
+            templates:
+                new: 'app/allowance/new.html.twig'
+                edit: 'app/allowance/edit.html.twig'
+                list: 'app/allowance/list.html.twig'
+            new:
+                title: 'Tambah Potongan'
+            edit:
+                title: 'Edit Potongan'
+            search:
+                title: 'Potongan'
+            form:
+                fields:
+                    - { type: 'group', css_class: 'col-sm-6' }
+                    - { property: 'year', label: 'Tahun', type: 'KejawenLab\Application\SemartHris\Form\Type\YearType', type_options: { attr: { class: 'static-select' } } }
+                    - { property: 'month', label: 'Bulan', type: 'KejawenLab\Application\SemartHris\Form\Type\MonthType', type_options: { attr: { class: 'static-select' } } }
+                    - { type: 'group', css_class: 'col-sm-6' }
+                    - { property: 'employee', label: 'Karyawan' }
+                    - { property: 'component', type: 'hidden', type_options: { attr: { class: 'component-id' } } }
+                    - { property: 'component_text', label: 'Komponen', type: 'choice', type_options: { required: true, attr: { class: 'component-select' }, mapped: false, choices: { 'label.form.empty_value': '' } } }
+                    - { type: 'group', css_class: 'col-sm-12' }
+                    - { property: 'benefitValue', label: 'Nilai', type: 'text' }
+            show:
+                title: 'Detil Potongan'
+            list:
+                role: '%env(string:SEMART_SECURITY_PAYROLL_MENU)%'
+                title: 'Potongan'
+                fields:
+                    - { property: 'year', label: 'Tahun', type: 'text' }
+                    - { property: 'month', label: 'Bulan', template: 'app/default/field_month.html.twig' }
+                    - { property: 'employee', label: 'Karyawan' }
+                    - { property: 'component', label: 'Potongan' }
+                    - { property: 'benefitValue', label: 'Nilai' }

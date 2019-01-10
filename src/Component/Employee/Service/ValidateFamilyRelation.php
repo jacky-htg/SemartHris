@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KejawenLab\Application\SemartHris\Component\Employee\Service;
 
 use KejawenLab\Application\SemartHris\Component\Employee\FamilyRelation;
@@ -7,7 +9,7 @@ use KejawenLab\Application\SemartHris\Component\ValidateTypeInterface;
 use KejawenLab\Application\SemartHris\Util\StringUtil;
 
 /**
- * @author Muhamad Surya Iksanudin <surya.iksanudin@kejawenlab.com>
+ * @author Muhamad Surya Iksanudin <surya.iksanudin@gmail.com>
  */
 class ValidateFamilyRelation implements ValidateTypeInterface
 {
@@ -19,11 +21,7 @@ class ValidateFamilyRelation implements ValidateTypeInterface
     public static function isValidType(string $type): bool
     {
         $type = StringUtil::lowercase($type);
-        if (!in_array($type, [
-            FamilyRelation::COUPLE,
-            FamilyRelation::PARENT,
-            FamilyRelation::SON,
-        ])) {
+        if (!in_array($type, self::getTypes())) {
             return false;
         }
 

@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KejawenLab\Application\SemartHris\Component\Employee\Model;
 
 use KejawenLab\Application\SemartHris\Component\Address\Model\AddressInterface;
 
 /**
- * @author Muhamad Surya Iksanudin <surya.iksanudin@kejawenlab.com>
+ * @author Muhamad Surya Iksanudin <surya.iksanudin@gmail.com>
  */
 interface EmployeeAddressInterface extends AddressInterface
 {
@@ -17,5 +19,5 @@ interface EmployeeAddressInterface extends AddressInterface
     /**
      * @param EmployeeInterface|null $employee
      */
-    public function setEmployee(EmployeeInterface $employee = null): void;
+    public function setEmployee(?EmployeeInterface $employee): void;
 }

@@ -1,17 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KejawenLab\Application\SemartHris\Controller\Admin;
 
 use EasyCorp\Bundle\EasyAdminBundle\Event\EasyAdminEvents;
 use KejawenLab\Application\SemartHris\Component\Attendance\Model\AttendanceInterface;
 use KejawenLab\Application\SemartHris\Component\Attendance\Service\AttendanceImporter;
 use KejawenLab\Application\SemartHris\Component\Attendance\Service\AttendanceProcessor;
+use KejawenLab\Application\SemartHris\Component\Attendance\Service\InvalidAttendancePeriodException;
+use KejawenLab\Application\SemartHris\Component\Setting\Service\Setting;
+use KejawenLab\Application\SemartHris\Component\Setting\SettingKey;
 use KejawenLab\Application\SemartHris\Form\Manipulator\AttendanceManipulator;
 use KejawenLab\Application\SemartHris\Repository\AttendanceRepository;
 use KejawenLab\Application\SemartHris\Repository\EmployeeRepository;
-use KejawenLab\Application\SemartHris\Util\Setting;
 use League\Csv\Reader;
 use Pagerfanta\Exception\LogicException;
+use Pagerfanta\Pagerfanta;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -20,7 +25,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @author Muhamad Surya Iksanudin <surya.iksanudin@kejawenlab.com>
+ * @author Muhamad Surya Iksanudin <surya.iksanudin@gmail.com>
  */
 class AttendanceController extends AdminController
 {
@@ -36,30 +41,33 @@ class AttendanceController extends AdminController
      */
     public function uploadAttendanceAction(Request $request): Response
     {
+        $this->denyAccessUnlessGranted($this->container->get(Setting::class)->get(SettingKey::SECURITY_ATTENDANCE_MENU));
+
         $this->initialize($request);
         $this->request = $request;
 
         if (null === $request->request->get('entity')) {
-            return $this->redirectToRoute('easyadmin', array(
+            return $this->redirectToRoute('easyadmin', [
                 'action' => 'list',
                 'sortField' => 'attendanceDate',
                 'sortDirection' => 'DESC',
                 'entity' => 'Attendance',
-            ));
+            ]);
         }
 
         /** @var UploadedFile $attendance */
         $attendance = $request->files->get('attendance');
         if (null === $attendance) {
-            return $this->redirectToRoute('easyadmin', array(
+            return $this->redirectToRoute('easyadmin', [
                 'action' => 'list',
                 'sortField' => 'attendanceDate',
                 'sortDirection' => 'DESC',
                 'entity' => 'Attendance',
-            ));
+            ]);
         }
 
-        $destination = sprintf('%s%s%s', $this->container->getParameter('kernel.project_dir'), Setting::get(Setting::UPDATE_DESTIONATION), Setting::get(Setting::ATTENDANCE_UPLOAD_PATH));
+        $setting = $this->container->get(Setting::class);
+        $destination = sprintf('%s%s%s', $this->container->getParameter('kernel.project_dir'), $setting->get(SettingKey::UPLOAD_DESTINATION), $setting->get(SettingKey::ATTENDANCE_UPLOAD_PATH));
         $fileName = sprintf('%s.%s', (new \DateTime())->format('Y_m_d_H_i_s'), $attendance->guessExtension());
         $attendance->move($destination, $fileName);
 
@@ -82,6 +90,8 @@ class AttendanceController extends AdminController
      */
     public function processUploadAction(Request $request)
     {
+        $this->denyAccessUnlessGranted($this->container->get(Setting::class)->get(SettingKey::SECURITY_ATTENDANCE_MENU));
+
         /** @var Reader $processor */
         $processor = Reader::createFromPath($request->getSession()->get(self::ATTENDANCE_UPLOAD_SESSION));
         $processor->setHeaderOffset(0);
@@ -89,12 +99,12 @@ class AttendanceController extends AdminController
         $importer = $this->container->get(AttendanceImporter::class);
         $importer->import($processor->getRecords());
 
-        return $this->redirectToRoute('easyadmin', array(
+        return $this->redirectToRoute('easyadmin', [
             'action' => 'list',
             'sortField' => 'attendanceDate',
             'sortDirection' => 'DESC',
             'entity' => 'Attendance',
-        ));
+        ]);
     }
 
     /**
@@ -107,9 +117,17 @@ class AttendanceController extends AdminController
      */
     public function processAction(Request $request)
     {
-        $month = (int) $request->get('month', date('n'));
+        $this->denyAccessUnlessGranted($this->container->get(Setting::class)->get(SettingKey::SECURITY_ATTENDANCE_MENU));
+
+        $month = (int) $request->request->get('month', date('n'));
+        $year = (int) $request->request->get('year', date('Y'));
+        $period = \DateTime::createFromFormat('Y-n', sprintf('%s-%s', $year, $month));
+        if ($month > date('n')) {
+            throw new InvalidAttendancePeriodException($period);
+        }
+
         $employeeRepository = $this->container->get(EmployeeRepository::class);
-        if ($ids = $request->get('employees')) {
+        if ($ids = $request->request->get('employees')) {
             $employees = $employeeRepository->finds($ids);
         } else {
             $employees = $employeeRepository->findAll();
@@ -117,7 +135,7 @@ class AttendanceController extends AdminController
 
         $processor = $this->container->get(AttendanceProcessor::class);
         foreach ($employees as $employee) {
-            $processor->process($employee, \DateTime::createFromFormat('Y-n', sprintf('%s-%s', date('Y'), $month)));
+            $processor->process($employee, $period);
         }
 
         return new JsonResponse(['message' => 'OK']);
@@ -133,7 +151,7 @@ class AttendanceController extends AdminController
         $fields = $this->entity['list']['fields'];
         $paginator = $this->findAll($this->entity['class'], $this->request->query->get('page', 1), $this->config['list']['max_results'], $this->request->query->get('sortField'), $this->request->query->get('sortDirection'), $this->entity['list']['dql_filter']);
 
-        $this->dispatch(EasyAdminEvents::POST_LIST, array('paginator' => $paginator));
+        $this->dispatch(EasyAdminEvents::POST_LIST, ['paginator' => $paginator]);
 
         $output = [];
         /** @var AttendanceInterface[] $results */
@@ -143,20 +161,16 @@ class AttendanceController extends AdminController
         }
 
         if (!$results) {
-            return $this->render($this->entity['templates']['list'], array(
-                'paginator' => $paginator,
-                'results' => $output,
-                'fields' => $fields,
-                'delete_form_template' => $this->createDeleteForm($this->entity['name'], '__id__')->createView(),
-            ));
+            return $this->doRender($paginator, $output, $fields);
         }
 
+        $setting = $this->container->get(Setting::class);
         if ('DESC' === $this->request->query->get('sortDirection')) {
             try {
                 $paginator->getNextPage();
                 $startDate = clone $results[count($results) - 1]->getAttendanceDate();
             } catch (LogicException $exception) {
-                $startDate = \DateTime::createFromFormat(Setting::get(Setting::DATE_TIME_FORMAT), sprintf('%s 00:00:00', $this->request->query->get('startDate', date(Setting::get(Setting::DATE_FORMAT)))));
+                $startDate = \DateTime::createFromFormat($setting->get(SettingKey::DATE_TIME_FORMAT), sprintf('%s 00:00:00', $this->request->query->get('startDate', date($setting->get(SettingKey::DATE_FORMAT)))));
             }
 
             $endDate = clone $results[0]->getAttendanceDate();
@@ -164,32 +178,27 @@ class AttendanceController extends AdminController
             try {
                 $paginator->getNextPage();
                 $endDate = clone $results[count($results) - 1]->getAttendanceDate();
-                $startDate = \DateTime::createFromFormat(Setting::get(Setting::DATE_TIME_FORMAT), sprintf('%s 00:00:00', $this->request->query->get('startDate', date(Setting::get(Setting::DATE_FORMAT)))));
+                $startDate = \DateTime::createFromFormat($setting->get(SettingKey::DATE_TIME_FORMAT), sprintf('%s 00:00:00', $this->request->query->get('startDate', date($setting->get(SettingKey::DATE_FORMAT)))));
             } catch (LogicException $exception) {
-                $endDate = \DateTime::createFromFormat(Setting::get(Setting::DATE_TIME_FORMAT), sprintf('%s 00:00:00', $this->request->query->get('endDate', date(Setting::get(Setting::DATE_FORMAT)))));
+                $endDate = \DateTime::createFromFormat($setting->get(SettingKey::DATE_TIME_FORMAT), sprintf('%s 00:00:00', $this->request->query->get('endDate', date($setting->get(SettingKey::DATE_FORMAT)))));
                 $startDate = clone $results[0]->getAttendanceDate();
             }
         }
 
         /** @var \DateTime $i */
         for ($i = $endDate; $i >= $startDate;) {
-            $output[$i->format(Setting::get(Setting::DATE_FORMAT))] = [];
+            $output[$i->format($setting->get(SettingKey::DATE_FORMAT))] = [];
             $i->sub(new \DateInterval('P1D'));
         }
 
         /** @var AttendanceInterface $result */
         foreach ($results as $result) {
-            if (empty($output[$result->getAttendanceDate()->format(Setting::get(Setting::DATE_FORMAT))])) {
-                $output[$result->getAttendanceDate()->format(Setting::get(Setting::DATE_FORMAT))] = $result;
+            if (empty($output[$result->getAttendanceDate()->format($setting->get(SettingKey::DATE_FORMAT))])) {
+                $output[$result->getAttendanceDate()->format($setting->get(SettingKey::DATE_FORMAT))] = $result;
             }
         }
 
-        return $this->render($this->entity['templates']['list'], array(
-            'paginator' => $paginator,
-            'results' => $output,
-            'fields' => $fields,
-            'delete_form_template' => $this->createDeleteForm($this->entity['name'], '__id__')->createView(),
-        ));
+        return $this->doRender($paginator, $output, $fields);
     }
 
     /**
@@ -202,13 +211,15 @@ class AttendanceController extends AdminController
      */
     protected function createListQueryBuilder($entityClass, $sortDirection, $sortField = null, $dqlFilter = null)
     {
-        $startDate = \DateTime::createFromFormat(Setting::get(Setting::DATE_FORMAT), $this->request->query->get('startDate', date(Setting::get(Setting::FIRST_DATE_FORMAT))));
-        $endDate = \DateTime::createFromFormat(Setting::get(Setting::DATE_FORMAT), $this->request->query->get('endDate', date(Setting::get(Setting::LAST_DATE_FORMAT))));
-        $companyId = $this->request->get('company');
-        $departmentId = $this->request->get('department');
-        $shiftmentId = $this->request->get('shiftment');
+        $setting = $this->container->get(Setting::class);
+        $startDate = \DateTime::createFromFormat($setting->get(SettingKey::DATE_FORMAT), $this->request->query->get('startDate', date($setting->get(SettingKey::FIRST_DATE_FORMAT))));
+        $endDate = \DateTime::createFromFormat($setting->get(SettingKey::DATE_FORMAT), $this->request->query->get('endDate', date($setting->get(SettingKey::LAST_DATE_FORMAT))));
+        $companyId = $this->request->query->get('company');
+        $departmentId = $this->request->query->get('department');
+        $shiftmentId = $this->request->query->get('shiftment');
+        $employeeId = $this->request->query->get('employeeId');
 
-        return $this->container->get(AttendanceRepository::class)->getFilteredAttendance($startDate, $endDate, $companyId, $departmentId, $shiftmentId, [$sortField => $sortDirection]);
+        return $this->container->get(AttendanceRepository::class)->getFilteredAttendance($startDate, $endDate, $companyId, $departmentId, $shiftmentId, $employeeId, [$sortField => $sortDirection]);
     }
 
     /**
@@ -222,5 +233,22 @@ class AttendanceController extends AdminController
         $builder = parent::createEntityFormBuilder($entity, $view);
 
         return $this->container->get(AttendanceManipulator::class)->manipulate($builder, $entity);
+    }
+
+    /**
+     * @param Pagerfanta $paginator
+     * @param array      $output
+     * @param array      $fields
+     *
+     * @return Response
+     */
+    private function doRender(Pagerfanta $paginator, array $output, array $fields)
+    {
+        return $this->render($this->entity['templates']['list'], [
+            'paginator' => $paginator,
+            'results' => $output,
+            'fields' => $fields,
+            'delete_form_template' => $this->createDeleteForm($this->entity['name'], '__id__')->createView(),
+        ]);
     }
 }

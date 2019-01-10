@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KejawenLab\Application\SemartHris\Form\Manipulator;
 
 use KejawenLab\Application\SemartHris\Component\Company\Model\CompanyInterface;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
- * @author Muhamad Surya Iksanudin <surya.iksanudin@kejawenlab.com>
+ * @author Muhamad Surya Iksanudin <surya.iksanudin@gmail.com>
  */
 class CompanyDepartmentManipulator extends FormManipulator implements FormManipulatorInterface
 {

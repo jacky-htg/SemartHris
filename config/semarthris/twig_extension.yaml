@@ -1,0 +1,48 @@
+services:
+    _defaults:
+        public: true
+    KejawenLab\Application\SemartHris\Twig\AttendanceExtension:
+        arguments:
+            - '@KejawenLab\Application\SemartHris\Repository\EmployeeRepository'
+            - '@KejawenLab\Application\SemartHris\Repository\ReasonRepository'
+            - '@KejawenLab\Application\SemartHris\Component\Setting\Service\Setting'
+            - 'KejawenLab\Application\SemartHris\Entity\Attendance'
+        tags:
+            - { name: 'twig.extension' }
+
+    KejawenLab\Application\SemartHris\Twig\OvertimeExtension:
+        arguments:
+            - '@KejawenLab\Application\SemartHris\Repository\EmployeeRepository'
+            - '@KejawenLab\Application\SemartHris\Component\Overtime\Service\OvertimeCalculator'
+            - '@KejawenLab\Application\SemartHris\Component\Setting\Service\Setting'
+            - 'KejawenLab\Application\SemartHris\Entity\Overtime'
+        tags:
+            - { name: 'twig.extension' }
+
+    KejawenLab\Application\SemartHris\Twig\HolidayExtension:
+        arguments:
+            - '@KejawenLab\Application\SemartHris\Repository\HolidayRepository'
+        tags:
+            - { name: 'twig.extension' }
+
+    KejawenLab\Application\SemartHris\Twig\EmployeeExtension:
+        arguments:
+            - '@KejawenLab\Application\SemartHris\Repository\EmployeeRepository'
+        tags:
+            - { name: 'twig.extension' }
+
+    KejawenLab\Application\SemartHris\Twig\RegionExtension:
+        arguments:
+            - '@KejawenLab\Application\SemartHris\Repository\RegionRepository'
+        tags:
+            - { name: 'twig.extension' }
+
+    KejawenLab\Application\SemartHris\Twig\SalaryComponentExtension:
+        arguments:
+            - '@KejawenLab\Application\SemartHris\Repository\SalaryComponentRepository'
+        tags:
+            - { name: 'twig.extension' }
+
+    KejawenLab\Application\SemartHris\Twig\SemartViewExtension:
+        tags:
+            - { name: 'twig.extension' }

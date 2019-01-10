@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KejawenLab\Application\SemartHris\Component\Attendance\Repository;
 
 use Doctrine\ORM\QueryBuilder;
@@ -7,7 +9,7 @@ use KejawenLab\Application\SemartHris\Component\Attendance\Model\AttendanceInter
 use KejawenLab\Application\SemartHris\Component\Employee\Model\EmployeeInterface;
 
 /**
- * @author Muhamad Surya Iksanudin <surya.iksanudin@kejawenlab.com>
+ * @author Muhamad Surya Iksanudin <surya.iksanudin@gmail.com>
  */
 interface AttendanceRepositoryInterface
 {
@@ -17,11 +19,12 @@ interface AttendanceRepositoryInterface
      * @param string|null        $companyId
      * @param string|null        $departmentId
      * @param string|null        $shiftmentId
+     * @param string|null        $employeeId
      * @param array              $sorts
      *
      * @return QueryBuilder
      */
-    public function getFilteredAttendance(\DateTimeInterface $startDate, \DateTimeInterface $endDate, string $companyId = null, string $departmentId = null, string $shiftmentId = null, array $sorts = []): QueryBuilder;
+    public function getFilteredAttendance(\DateTimeInterface $startDate, \DateTimeInterface $endDate, ?string $companyId, ?string $departmentId, ?string $shiftmentId, ?string $employeeId, array $sorts = []): QueryBuilder;
 
     /**
      * @param EmployeeInterface  $employee
@@ -42,4 +45,21 @@ interface AttendanceRepositoryInterface
      * @param AttendanceInterface $attendance
      */
     public function update(AttendanceInterface $attendance): void;
+
+    /**
+     * @param EmployeeInterface  $employee
+     * @param \DateTimeInterface $date
+     *
+     * @return AttendanceInterface
+     */
+    public function createNew(EmployeeInterface $employee, \DateTimeInterface $date): AttendanceInterface;
+
+    /**
+     * @param EmployeeInterface  $employee
+     * @param \DateTimeInterface $from
+     * @param \DateTimeInterface $to
+     *
+     * @return array
+     */
+    public function getSummaryByEmployeeAndDate(EmployeeInterface $employee, \DateTimeInterface $from, \DateTimeInterface $to): array;
 }

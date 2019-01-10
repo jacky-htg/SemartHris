@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KejawenLab\Application\SemartHris\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -30,7 +32,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @Gedmo\SoftDeleteable(fieldName="deletedAt")
  *
- * @author Muhamad Surya Iksanudin <surya.iksanudin@kejawenlab.id>
+ * @author Muhamad Surya Iksanudin <surya.iksanudin@gmail.com>
  */
 class CompanyAddress implements CompanyAddressInterface
 {
@@ -164,7 +166,7 @@ class CompanyAddress implements CompanyAddressInterface
     /**
      * @param CompanyInterface|null $company
      */
-    public function setCompany(CompanyInterface $company = null): void
+    public function setCompany(?CompanyInterface $company): void
     {
         $this->company = $company;
     }
@@ -196,7 +198,7 @@ class CompanyAddress implements CompanyAddressInterface
     /**
      * @param RegionInterface|null $region
      */
-    public function setRegion(RegionInterface $region = null): void
+    public function setRegion(?RegionInterface $region): void
     {
         $this->region = $region;
     }
@@ -212,7 +214,7 @@ class CompanyAddress implements CompanyAddressInterface
     /**
      * @param CityInterface|null $city
      */
-    public function setCity(CityInterface $city = null): void
+    public function setCity(?CityInterface $city): void
     {
         $this->city = $city;
     }
@@ -282,9 +284,9 @@ class CompanyAddress implements CompanyAddressInterface
     }
 
     /**
-     * @return Addressable
+     * @return Addressable|null
      */
-    public function getAddressable(): Addressable
+    public function getAddressable(): ? Addressable
     {
         return $this->getCompany();
     }

@@ -1,4 +1,4 @@
-{% extends '@EasyAdmin/default/list.html.twig' %}
+{% extends 'app/default/list.html.twig' %}
 
 {% set _select2_locales = ['ar', 'az', 'bg', 'ca', 'cs', 'da', 'de', 'el', 'en', 'es', 'et', 'eu', 'fa', 'fi', 'fr', 'gl', 'he', 'hi', 'hr', 'hu', 'id', 'is', 'it', 'ja', 'km', 'ko', 'lt', 'lv', 'mk', 'ms', 'nb', 'nl', 'pl', 'pt-BR', 'pt', 'ro', 'ru', 'sk', 'sr-Cyrl', 'sr', 'sv', 'th', 'tr', 'uk', 'vi', 'zh-CN', 'zh-TW'] %}
 {% set _app_language = app.request.locale|split('-')|first|split('_')|first %}
@@ -8,19 +8,24 @@
 %}
 
 {% set _entity_config = easyadmin_entity(app.request.query.get('entity')) %}
-{% set startDate = app.request.get('startDate', date() | date('01-m-Y')) %}
-{%  set endDate = app.request.get('endDate', date() | date('t-m-Y')) %}
+{% set startDate = app.request.query.get('startDate', date() | date('01-m-Y')) %}
+{%  set endDate = app.request.query.get('endDate', date() | date('t-m-Y')) %}
+{% set extraField = is_granted('ROLE_SUPER_ADMIN') ? 1 : 0 %}
 
 {% set _request_parameters = _request_parameters|default({})|merge({
-    action: app.request.get('action'),
+    action: app.request.query.get('action'),
     entity: _entity_config.name,
-    menuIndex: app.request.get('menuIndex'),
-    submenuIndex: app.request.get('submenuIndex'),
-    sortField: app.request.get('sortField', ''),
+    menuIndex: app.request.query.get('menuIndex'),
+    submenuIndex: app.request.query.get('submenuIndex'),
+    sortField: app.request.query.get('sortField', ''),
     startDate: startDate,
     endDate: endDate,
-    sortDirection: app.request.get('sortDirection', 'DESC'),
-    page: app.request.get('page', 1)
+    company: app.request.query.get('company'),
+    department: app.request.query.get('department'),
+    shiftment: app.request.query.get('shiftment'),
+    employeeId: app.request.query.get('employeeId'),
+    sortDirection: app.request.query.get('sortDirection', 'DESC'),
+    page: app.request.query.get('page', 1)
 }) %}
 
 {% block global_actions %}
@@ -59,46 +64,85 @@
             <input type="hidden" name="sortDirection" value="{{ _entity_config.search.sort.direction|default(_request_parameters.sortDirection) }}">
             <input type="hidden" name="menuIndex" value="{{ _request_parameters.menuIndex }}">
             <input type="hidden" name="submenuIndex" value="{{ _request_parameters.submenuIndex }}">
-            <div class="field-group col-xs-12 col-sm-12">
+            <div class="field-group col-xs-12 col-sm-12 col-md-12">
                 <div class="box box-default">
                     <div class="box-body">
                         <div class="row">
-                            <div class="col-xs-12 col-sm-6">
+                            <div class="col-xs-12 col-sm-12 col-md-6 new-row">
+                                <div class="form-group">
+                                    <label class="control-label" for="shiftment">Pilih Karyawan</label>
+                                    {% set employee = semarthris_create_employee(app.request.query.get('employeeId', '')) %}
+                                    <select class="employee-search" name="employeeId">
+                                        {% if employee is not null %}
+                                            <option value="{{ employee.id }}">{{ employee.code ~ ' ' ~ employee.fullName }}</option>
+                                        {% endif %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label" for="startDate">Pilih Tanggal</label>
+                                    <div class="input-group input-daterange">
+                                        <input type="text" name="startDate" class="form-control" required="required" value="{{ app.request.query.get('startDate') ?: date() | date('01-m-Y') }}">
+                                        <span class="input-group-addon"><i class="fa fa-exchange" aria-hidden="true"></i></span>
+                                        <input type="text" name="endDate" class="form-control" required="required" value="{{ app.request.query.get('endDate') ?: date() | date('t-m-Y') }}">
+                                        <span class="input-group-btn">
+                                            <button name="filter" id="filter" class="btn btn-primary pull-right" type="submit"><i class="fa fa-television"></i> {{ 'label.attendance.filter_action' | trans({}, 'messages') }}</button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="row">
+        <form method="get" action="{{ path('easyadmin') }}">
+            <input type="hidden" name="entity" value="{{ _request_parameters.entity }}">
+            <input type="hidden" name="sortField" value="{{ _entity_config.search.sort.field|default(_request_parameters.sortField) }}">
+            <input type="hidden" name="sortDirection" value="{{ _entity_config.search.sort.direction|default(_request_parameters.sortDirection) }}">
+            <input type="hidden" name="menuIndex" value="{{ _request_parameters.menuIndex }}">
+            <input type="hidden" name="submenuIndex" value="{{ _request_parameters.submenuIndex }}">
+            <div class="field-group col-xs-12 col-sm-12 col-md-12">
+                <div class="box box-default">
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-6">
                                 <div class="form-group">
                                     <label class="control-label" for="company">Pilih Perusahaan</label>
                                     <select id="company" name="company" class="static-select company-select">
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-xs-12 col-sm-6">
+                            <div class="col-xs-12 col-sm-12 col-md-6">
                                 <div class="form-group">
                                     <label class="control-label" for="department">Pilih Department</label>
-                                    <input type="hidden" name="department" class="department-id" value="{{ app.request.get('department') }}">
+                                    <input type="hidden" name="department" class="department-id" value="{{ app.request.query.get('department') }}">
                                     <select id="department" name="department_text" class="department-select">
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-xs-12 col-sm-6 new-row">
+                            <div class="col-xs-12 col-sm-12 col-md-6 new-row">
                                 <div class="form-group">
                                     <label class="control-label" for="shiftment">Pilih Shift</label>
                                     <select id="shiftment" name="shiftment" class="static-select shiftment-select">
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-xs-12 col-sm-5">
+                            <div class="col-xs-12 col-sm-12 col-md-6">
                                 <div class="form-group">
                                     <label class="control-label" for="startDate">Pilih Tanggal</label>
                                     <div class="input-group input-daterange">
-                                        <input id="startDate" type="text" name="startDate" class="form-control startDate" required="required" value="{{ app.request.get('startDate') ?: date() | date('01-m-Y') }}">
+                                        <input id="startDate" type="text" name="startDate" class="form-control startDate" required="required" value="{{ app.request.query.get('startDate') ?: date() | date('01-m-Y') }}">
                                         <span class="input-group-addon"><i class="fa fa-exchange" aria-hidden="true"></i></span>
-                                        <input id="endDate" type="text" name="endDate" class="form-control" required="required" value="{{ app.request.get('endDate') ?: date() | date('t-m-Y') }}">
+                                        <input id="endDate" type="text" name="endDate" class="form-control" required="required" value="{{ app.request.query.get('endDate') ?: date() | date('t-m-Y') }}">
+                                        <span class="input-group-btn">
+                                            <button name="filter" id="filter" class="btn btn-primary pull-right" type="submit"><i class="fa fa-television"></i> {{ 'label.attendance.filter_action' | trans({}, 'messages') }}</button>
+                                        </span>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="col-xs-1">
-                                <div class="form-group field-date">
-                                    <label class="control-label new-row" for="endDate">&nbsp;</label>
-                                    <button name="filter" id="filter" class="btn btn-primary pull-right" type="submit"><i class="fa fa-television"></i> {{ 'label.attendance.filter_action' | trans({}, 'messages') }}</button>
                                 </div>
                             </div>
                         </div>
@@ -115,8 +159,8 @@
                 <tr>
                     <td><input type="checkbox" name="employee_checkall" class="employee_checkall"/></td>
                     {% for field, metadata in fields %}
-                        {% set isSortingField = metadata.property == app.request.get('sortField')|split('.')|first %}
-                        {% set nextSortDirection = isSortingField ? (app.request.get('sortDirection') == 'DESC' ? 'ASC' : 'DESC') : 'DESC' %}
+                        {% set isSortingField = metadata.property == app.request.query.get('sortField')|split('.')|first %}
+                        {% set nextSortDirection = isSortingField ? (app.request.query.get('sortDirection') == 'DESC' ? 'ASC' : 'DESC') : 'DESC' %}
                         {% set _column_label = (metadata.label ?: field|humanize)|trans(_trans_parameters) %}
                         {% set _column_icon = isSortingField ? (nextSortDirection == 'DESC' ? 'fa-caret-up' : 'fa-caret-down') : 'fa-sort' %}
 
@@ -131,6 +175,10 @@
                             {% endif %}
                         </th>
                     {% endfor %}
+
+                    {% if is_granted('ROLE_SUPER_ADMIN') %}
+                        <th data-property-name="deleted"><span>{{ 'semarthris.is_deleted' | trans({}, 'messages') }}</span></th>
+                    {% endif %}
 
                     {% if _list_item_actions|length > 0 %}
                         <th>
@@ -151,13 +199,21 @@
                             {% set employeeId = item.employee ? item.employee.id : null %}
                             <td><input type="checkbox" name="employee[]" class="employee" data-employee="{{ employeeId }}"/></td>
                         {% for field, metadata in fields %}
-                            {% set isSortingField = metadata.property == app.request.get('sortField') %}
+                            {% set isSortingField = metadata.property == app.request.query.get('sortField') %}
                             {% set _column_label =  (metadata.label ?: field|humanize)|trans(_trans_parameters)  %}
 
                             <td data-label="{{ _column_label }}" class="{{ isSortingField ? 'sorted' }} {{ metadata.dataType|lower }} {{ metadata.css_class }}">
                                 {{ easyadmin_render_field_for_list_view(_entity_config.name, item, metadata) }}
                             </td>
                         {% endfor %}
+
+                        {% if is_granted('ROLE_SUPER_ADMIN') %}
+                            {% if attribute(item, 'deleted') is defined and item.deleted == true %}
+                                <td>{{ include('@EasyAdmin/default/field_toggle.html.twig', { value: true, view: 'list', backend_config: _entity_config }) }}</td>
+                            {% else %}
+                                <td>{{ include('@EasyAdmin/default/field_boolean.html.twig', { value: false }) }}</td>
+                            {% endif %}
+                        {% endif %}
 
                         {% if _list_item_actions|length > 0 %}
                             {% set _column_label =  'list.row_actions'|trans(_trans_parameters, 'EasyAdminBundle') %}
@@ -179,17 +235,17 @@
                             <td>&nbsp;</td>
                             <td>{{ key }}</td>
                             {% if semarthris_is_weekend_holiday(date(key)) %}
-                                <td colspan="8" class="label label-primary text-center">
+                                <td colspan="{{ _list_item_actions|length > 0 ? fields|length + extraField : fields|length }}" class="label label-primary text-center">
                                 {{ 'semarthris.weekend_holiday' | trans({}, 'messages') | upper }}
                                 </td>
                             {% else %}
                                 {% set holiday = semarthris_holiday(date(key)) %}
                                 {% if holiday is null %}
-                                    <td colspan="8" class="label label-success text-center">
+                                    <td colspan="{{ _list_item_actions|length > 0 ? fields|length + extraField : fields|length }}" class="label label-success text-center">
                                         {{ 'label.null' | trans({}, 'EasyAdminBundle') | upper }}
                                     </td>
                                 {%  else %}
-                                    <td colspan="8" class="label label-danger text-center">
+                                    <td colspan="{{ _list_item_actions|length > 0 ? fields|length + extraField : fields|length }}" class="label label-danger text-center">
                                         {{ holiday | upper }}
                                     </td>
                                 {% endif %}
@@ -198,7 +254,7 @@
                     {% endif %}
                 {% else %}
                     <tr>
-                        <td class="no-results" colspan="{{ _list_item_actions|length > 0 ? fields|length + 2 : fields|length }}">
+                        <td class="no-results" colspan="{{ _list_item_actions|length > 0 ? fields|length + 2 + extraField : fields | length + 1 + extraField }}">
                             {{ 'search.no_results'|trans(_trans_parameters, 'EasyAdminBundle') }}
                         </td>
                     </tr>
@@ -275,7 +331,15 @@
             });
 
             $(document).on('click', '.download', function () {
-                window.location = '/files/attendances/template.csv?force=1';
+                window.location = '/files/templates/attendance.csv?force=1';
+            });
+
+            $(document).on('change', 'input[name=startDate]', function () {
+                $('input[name=startDate]').val($(this).val());
+            });
+
+            $(document).on('change', 'input[name=endDate]', function () {
+                $('input[name=endDate]').val($(this).val());
             });
 
             $(document).on('click', '.process-attendance', function () {
@@ -292,7 +356,8 @@
                     type: 'POST',
                     data: {
                         employees: employees,
-                        month: month
+                        month: month,
+                        year: date.getFullYear()
                     },
                     beforeSend: function () {},
                     success: function () {
@@ -315,9 +380,12 @@
             change_file_chooser(btnFile, 'fa fa-file-excel-o', true);
             change_static_select(locale);
             date_range_picker(locale,  '{{ date_format_long }}');
-            company_autocomplete(emptyText, '{{ app.request.get('company') }}');
-            shiftment_autocomplete(emptyText, '{{ app.request.get('shiftment') }}');
+            company_autocomplete(emptyText, '{{ app.request.query.get('company') }}');
+            shiftment_autocomplete(emptyText, '{{ app.request.query.get('shiftment') }}');
             department_autocomplete(locale, emptyText);
+
+            employee_search('{{ _select2_locale }}');
+            $('.employee-search').change();
         });
     </script>
 {% endblock %}

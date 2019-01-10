@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KejawenLab\Application\SemartHris\EventListener;
 
 use Doctrine\Common\EventSubscriber;
@@ -10,7 +12,7 @@ use KejawenLab\Application\SemartHris\Component\Job\Service\SetEmployeeNewJob;
 use KejawenLab\Application\SemartHris\Component\Job\Service\SetOldJobMutation;
 
 /**
- * @author Muhamad Surya Iksanudin <surya.iksanudin@kejawenlab.com>
+ * @author Muhamad Surya Iksanudin <surya.iksanudin@gmail.com>
  */
 class SetOldJobMutationSubscriber implements EventSubscriber
 {

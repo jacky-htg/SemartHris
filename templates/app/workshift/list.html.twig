@@ -1,4 +1,4 @@
-{% extends '@EasyAdmin/default/list.html.twig' %}
+{% extends 'app/default/list.html.twig' %}
 
 {% set _select2_locales = ['ar', 'az', 'bg', 'ca', 'cs', 'da', 'de', 'el', 'en', 'es', 'et', 'eu', 'fa', 'fi', 'fr', 'gl', 'he', 'hi', 'hr', 'hu', 'id', 'is', 'it', 'ja', 'km', 'ko', 'lt', 'lv', 'mk', 'ms', 'nb', 'nl', 'pl', 'pt-BR', 'pt', 'ro', 'ru', 'sk', 'sr-Cyrl', 'sr', 'sv', 'th', 'tr', 'uk', 'vi', 'zh-CN', 'zh-TW'] %}
 {% set _app_language = app.request.locale|split('-')|first|split('_')|first %}
@@ -61,9 +61,9 @@
                                 <div class="form-group">
                                     <label class="control-label" for="startDate">Pilih Tanggal</label>
                                     <div class="input-group input-daterange">
-                                        <input id="startDate" type="text" name="startDate" class="form-control" required="required" value="{{ app.request.get('startDate') ?: date() | date('01-m-Y') }}">
+                                        <input id="startDate" type="text" name="startDate" class="form-control" required="required" value="{{ app.request.query.get('startDate') ?: date() | date('01-m-Y') }}">
                                         <span class="input-group-addon"><i class="fa fa-exchange" aria-hidden="true"></i></span>
-                                        <input id="endDate" type="text" name="endDate" class="form-control" required="required" value="{{ app.request.get('endDate') ?: date() | date('t-m-Y') }}">
+                                        <input id="endDate" type="text" name="endDate" class="form-control" required="required" value="{{ app.request.query.get('endDate') ?: date() | date('t-m-Y') }}">
                                     </div>
                                 </div>
                             </div>

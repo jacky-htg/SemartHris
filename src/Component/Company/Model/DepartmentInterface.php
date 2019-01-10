@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KejawenLab\Application\SemartHris\Component\Company\Model;
 
 /**
- * @author Muhamad Surya Iksanudin <surya.iksanudin@kejawenlab.com>
+ * @author Muhamad Surya Iksanudin <surya.iksanudin@gmail.com>
  */
 interface DepartmentInterface
 {
@@ -15,12 +17,12 @@ interface DepartmentInterface
     /**
      * @return null|DepartmentInterface
      */
-    public function getParent(): ? DepartmentInterface;
+    public function getParent(): ? self;
 
     /**
      * @param DepartmentInterface|null $department
      */
-    public function setParent(DepartmentInterface $department = null): void;
+    public function setParent(?self $department): void;
 
     /**
      * @return string

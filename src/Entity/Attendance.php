@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KejawenLab\Application\SemartHris\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -33,7 +35,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @Gedmo\SoftDeleteable(fieldName="deletedAt")
  *
- * @author Muhamad Surya Iksanudin <surya.iksanudin@kejawenlab.id>
+ * @author Muhamad Surya Iksanudin <surya.iksanudin@gmail.com>
  */
 class Attendance implements AttendanceInterface
 {
@@ -185,14 +187,6 @@ class Attendance implements AttendanceInterface
     }
 
     /**
-     * @param string $id
-     */
-    public function setId(string $id)
-    {
-        $this->id = $id;
-    }
-
-    /**
      * @return EmployeeInterface|null
      */
     public function getEmployee(): ? EmployeeInterface
@@ -203,7 +197,7 @@ class Attendance implements AttendanceInterface
     /**
      * @param EmployeeInterface|null $employee
      */
-    public function setEmployee(EmployeeInterface $employee = null): void
+    public function setEmployee(?EmployeeInterface $employee): void
     {
         $this->employee = $employee;
     }
@@ -219,7 +213,7 @@ class Attendance implements AttendanceInterface
     /**
      * @param ShiftmentInterface|null $shiftment
      */
-    public function setShiftment(ShiftmentInterface $shiftment = null): void
+    public function setShiftment(?ShiftmentInterface $shiftment): void
     {
         $this->shiftment = $shiftment;
     }
@@ -235,7 +229,7 @@ class Attendance implements AttendanceInterface
     /**
      * @param \DateTimeInterface|null $attendanceDate
      */
-    public function setAttendanceDate(\DateTimeInterface $attendanceDate = null): void
+    public function setAttendanceDate(?\DateTimeInterface $attendanceDate): void
     {
         $this->attendanceDate = $attendanceDate;
     }
@@ -249,9 +243,9 @@ class Attendance implements AttendanceInterface
     }
 
     /**
-     * @param string $description
+     * @param null|string $description
      */
-    public function setDescription(string $description): void
+    public function setDescription(?string $description): void
     {
         $this->description = $description;
     }
@@ -267,7 +261,7 @@ class Attendance implements AttendanceInterface
     /**
      * @param \DateTimeInterface|null $checkIn
      */
-    public function setCheckIn(\DateTimeInterface $checkIn = null): void
+    public function setCheckIn(?\DateTimeInterface $checkIn): void
     {
         $this->checkIn = $checkIn;
     }
@@ -283,7 +277,7 @@ class Attendance implements AttendanceInterface
     /**
      * @param \DateTimeInterface|null $checkOut
      */
-    public function setCheckOut(\DateTimeInterface $checkOut = null): void
+    public function setCheckOut(?\DateTimeInterface $checkOut): void
     {
         $this->checkOut = $checkOut;
     }
@@ -379,7 +373,7 @@ class Attendance implements AttendanceInterface
     /**
      * @param ReasonInterface $reason
      */
-    public function setReason(ReasonInterface $reason = null): void
+    public function setReason(?ReasonInterface $reason): void
     {
         $this->reason = $reason;
     }

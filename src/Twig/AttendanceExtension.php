@@ -1,14 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KejawenLab\Application\SemartHris\Twig;
 
 use KejawenLab\Application\SemartHris\Component\Attendance\Model\AttendanceInterface;
 use KejawenLab\Application\SemartHris\Component\Employee\Repository\EmployeeRepositoryInterface;
 use KejawenLab\Application\SemartHris\Component\Reason\Repository\ReasonRepositoryInterface;
+use KejawenLab\Application\SemartHris\Component\Setting\Service\Setting;
+use KejawenLab\Application\SemartHris\Component\Setting\SettingKey;
 use KejawenLab\Application\SemartHris\Util\StringUtil;
 
 /**
- * @author Muhamad Surya Iksanudin <surya.iksanudin@kejawenlab.com>
+ * @author Muhamad Surya Iksanudin <surya.iksanudin@gmail.com>
  */
 class AttendanceExtension extends \Twig_Extension
 {
@@ -23,6 +27,11 @@ class AttendanceExtension extends \Twig_Extension
     private $reasonRepository;
 
     /**
+     * @var Setting
+     */
+    private $setting;
+
+    /**
      * @var string
      */
     private $attendanceClass;
@@ -30,12 +39,18 @@ class AttendanceExtension extends \Twig_Extension
     /**
      * @param EmployeeRepositoryInterface $employeeRepository
      * @param ReasonRepositoryInterface   $reasonRepository
+     * @param Setting                     $setting
      * @param string                      $attendanceClass
      */
-    public function __construct(EmployeeRepositoryInterface $employeeRepository, ReasonRepositoryInterface $reasonRepository, string $attendanceClass)
-    {
+    public function __construct(
+        EmployeeRepositoryInterface $employeeRepository,
+        ReasonRepositoryInterface $reasonRepository,
+        Setting $setting,
+        string $attendanceClass
+    ) {
         $this->employeeRepository = $employeeRepository;
         $this->reasonRepository = $reasonRepository;
+        $this->setting = $setting;
         $this->attendanceClass = $attendanceClass;
     }
 
@@ -44,9 +59,9 @@ class AttendanceExtension extends \Twig_Extension
      */
     public function getFunctions(): array
     {
-        return array(
-            new \Twig_SimpleFunction('semarthris_create_attendance_preview', array($this, 'createAttendancePreview')),
-        );
+        return [
+            new \Twig_SimpleFunction('semarthris_create_attendance_preview', [$this, 'createAttendancePreview']),
+        ];
     }
 
     /**
@@ -65,14 +80,14 @@ class AttendanceExtension extends \Twig_Extension
             throw new \InvalidArgumentException();
         }
 
-        $attendanceDate = \DateTime::createFromFormat('Y-m-d', StringUtil::sanitize($preview['date']));
+        $attendanceDate = \DateTime::createFromFormat($this->setting->get(SettingKey::DATE_FORMAT), StringUtil::sanitize($preview['date']));
         $attendance = new $this->attendanceClass();
         $attendance->setAttendanceDate($attendanceDate);
         $attendance->setEmployee($employee);
 
         if (!(isset($preview['check_in']) && $preview['check_in']) || !(isset($preview['check_out']) && $preview['check_out'])) {
             $attendance->setAbsent(true);
-            if (isset($preview['reason_code']) && $reason = $this->reasonRepository->findByCode($preview['reason_code'])) {
+            if (isset($preview['reason_code']) && $reason = $this->reasonRepository->findAbsentReasonByCode($preview['reason_code'])) {
                 $attendance->setReason($reason);
             }
         } else {

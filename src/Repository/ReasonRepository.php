@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KejawenLab\Application\SemartHris\Repository;
 
 use KejawenLab\Application\SemartHris\Component\Reason\Model\ReasonInterface;
@@ -8,7 +10,7 @@ use KejawenLab\Application\SemartHris\Component\Reason\Repository\ReasonReposito
 use KejawenLab\Application\SemartHris\Util\StringUtil;
 
 /**
- * @author Muhamad Surya Iksanudin <surya.iksanudin@kejawenlab.com>
+ * @author Muhamad Surya Iksanudin <surya.iksanudin@gmail.com>
  */
 class ReasonRepository extends Repository implements ReasonRepositoryInterface
 {
@@ -19,6 +21,10 @@ class ReasonRepository extends Repository implements ReasonRepositoryInterface
      */
     public function findByType(string $type): array
     {
+        if (!$type) {
+            return [];
+        }
+
         $queryBuilder = $this->entityManager->createQueryBuilder();
         $queryBuilder->select('r.id, r.code, r.name');
         $queryBuilder->from($this->entityClass, 'r');
@@ -32,9 +38,9 @@ class ReasonRepository extends Repository implements ReasonRepositoryInterface
      *
      * @return ReasonInterface|null
      */
-    public function find(string $id): ? ReasonInterface
+    public function find(?string $id): ? ReasonInterface
     {
-        return $this->entityManager->getRepository($this->entityClass)->find($id);
+        return $this->doFind($id);
     }
 
     /**
@@ -42,8 +48,12 @@ class ReasonRepository extends Repository implements ReasonRepositoryInterface
      *
      * @return ReasonInterface|null
      */
-    public function findByCode(string $code): ? ReasonInterface
+    public function findAbsentReasonByCode(string $code): ? ReasonInterface
     {
+        if (!$code) {
+            return null;
+        }
+
         return $this->entityManager->getRepository($this->entityClass)->findOneBy(['code' => StringUtil::uppercase($code), 'type' => ReasonType::ABSENT_CODE]);
     }
 }

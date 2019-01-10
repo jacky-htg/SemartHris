@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KejawenLab\Application\SemartHris\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -27,7 +29,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @Gedmo\SoftDeleteable(fieldName="deletedAt")
  *
- * @author Muhamad Surya Iksanudin <surya.iksanudin@kejawenlab.id>
+ * @author Muhamad Surya Iksanudin <surya.iksanudin@gmail.com>
  */
 class Contract implements ContractInterface
 {
@@ -225,7 +227,7 @@ class Contract implements ContractInterface
     /**
      * @param string $description
      */
-    public function setDescription(string $description = null): void
+    public function setDescription(?string $description): void
     {
         $this->description = $description;
     }
@@ -257,7 +259,7 @@ class Contract implements ContractInterface
     /**
      * @param \DateTimeInterface|null $endDate
      */
-    public function setEndDate(\DateTimeInterface $endDate = null): void
+    public function setEndDate(?\DateTimeInterface $endDate): void
     {
         $this->endDate = $endDate;
     }
@@ -291,8 +293,12 @@ class Contract implements ContractInterface
      */
     public function setTags(array $tags = []): void
     {
+        $this->tags = [];
         foreach ($tags as $tag) {
-            $this->tags[] = StringUtil::uppercase($tag);
+            $tag = StringUtil::uppercase($tag);
+            if ($tag && !in_array($tag, $this->tags)) {
+                $this->tags[] = $tag;
+            }
         }
     }
 

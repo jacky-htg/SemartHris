@@ -1,17 +1,36 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KejawenLab\Application\SemartHris\Form\Manipulator;
 
 use KejawenLab\Application\SemartHris\Component\Address\Model\CityInterface;
 use KejawenLab\Application\SemartHris\Component\Employee\Model\EmployeeInterface;
+use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
- * @author Muhamad Surya Iksanudin <surya.iksanudin@kejawenlab.com>
+ * @author Muhamad Surya Iksanudin <surya.iksanudin@gmail.com>
  */
 class EmployeeAddressManipulator extends FormManipulator implements FormManipulatorInterface
 {
+    /**
+     * @var DataTransformerInterface
+     */
+    private $employeeTransformer;
+
+    /**
+     * @param DataTransformerInterface $transformer
+     * @param array                    $dataTransformers
+     * @param array                    $eventSubscribers
+     */
+    public function __construct(DataTransformerInterface $transformer, $dataTransformers = [], $eventSubscribers = [])
+    {
+        parent::__construct($dataTransformers, $eventSubscribers);
+        $this->employeeTransformer = $transformer;
+    }
+
     /**
      * @param FormBuilderInterface $formBuilder
      * @param mixed                $entity
@@ -28,7 +47,7 @@ class EmployeeAddressManipulator extends FormManipulator implements FormManipula
 
             $formBuilder->add('employee', HiddenType::class);
             $employee = $formBuilder->get('employee');
-            $employee->addModelTransformer($this->getDataTransformerForField('employee'));
+            $employee->addModelTransformer($this->employeeTransformer);
             $employee->setData($employeeEntity->getId());
 
             $formBuilder->get('employee_readonly')->setData($employeeEntity);

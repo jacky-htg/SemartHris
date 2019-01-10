@@ -1,0 +1,104 @@
+services:
+    _defaults:
+        public: true
+    KejawenLab\Application\SemartHris\EventListener\DefaultAddressCheckerSubscriber:
+        lazy: true
+        arguments:
+            - '@KejawenLab\Application\SemartHris\Component\Address\Service\DefaultAddressChecker'
+        tags:
+            - { name: 'kernel.event_subscriber' }
+
+    KejawenLab\Application\SemartHris\EventListener\GenerateUsernameSubscriber:
+        lazy: true
+        arguments:
+            - '@KejawenLab\Application\SemartHris\Repository\EmployeeRepository'
+            - '@KejawenLab\Application\SemartHris\Security\Service\PasswordSetter'
+            - '@KejawenLab\Application\SemartHris\Component\User\Service\UsernameGenerator'
+            - '%env(SEMART_DEFAULT_PASSWORD)%'
+        tags:
+            - { name: 'doctrine.event_subscriber' }
+
+    KejawenLab\Application\SemartHris\EventListener\UpdateJoinDateFromContractSubscriber:
+        lazy: true
+        tags:
+            - { name: 'doctrine.event_subscriber' }
+
+    KejawenLab\Application\SemartHris\EventListener\AddCareerHistorySubscriber:
+        lazy: true
+        arguments:
+            - '@KejawenLab\Application\SemartHris\Component\Job\Service\AddCareerHistory'
+        tags:
+            - { name: 'doctrine.event_subscriber' }
+
+    KejawenLab\Application\SemartHris\EventListener\SetOldJobMutationSubscriber:
+        lazy: true
+        tags:
+            - { name: 'doctrine.event_subscriber' }
+
+    KejawenLab\Application\SemartHris\EventListener\SetOldTaxDataHistorySubscriber:
+        lazy: true
+        tags:
+            - { name: 'doctrine.event_subscriber' }
+
+    KejawenLab\Application\SemartHris\EventListener\WorkshiftSlicerSubscriber:
+        lazy: true
+        arguments:
+            - '@KejawenLab\Application\SemartHris\Component\Attendance\Service\WorkshiftSlicer'
+            - '@KejawenLab\Application\SemartHris\Repository\WorkshiftRepository'
+        tags:
+            - { name: 'doctrine.event_subscriber' }
+
+    KejawenLab\Application\SemartHris\EventListener\MarkUsedContractSubscriber:
+        lazy: true
+        arguments:
+            - '@KejawenLab\Application\SemartHris\Component\Contract\Service\CheckContract'
+        tags:
+            - { name: 'doctrine.event_subscriber' }
+
+    KejawenLab\Application\SemartHris\EventListener\AttendanceCalculatorSubscriber:
+        lazy: true
+        arguments:
+            - '@KejawenLab\Application\SemartHris\Component\Attendance\Service\AttendanceCalculator'
+        tags:
+            - { name: 'doctrine.event_subscriber' }
+
+    KejawenLab\Application\SemartHris\EventListener\ChangeBenefitSubscriber:
+        lazy: true
+        arguments:
+            - '@KejawenLab\Application\SemartHris\Component\Salary\Service\ChangeBenefit'
+        tags:
+            - { name: 'doctrine.event_subscriber' }
+
+    KejawenLab\Application\SemartHris\EventListener\EncryptorSubscriber:
+        lazy: true
+        arguments:
+            - '@annotations.reader'
+            - '@Symfony\Component\PropertyAccess\PropertyAccessorInterface'
+            - '@KejawenLab\Application\SemartHris\Component\Encryptor\Encryptor'
+        tags:
+            - { name: 'doctrine.event_subscriber' }
+
+    KejawenLab\Application\SemartHris\EventListener\OvertimeCalculatorSubscriber:
+        lazy: true
+        arguments:
+            - '@KejawenLab\Application\SemartHris\Component\Overtime\Service\OvertimeCalculator'
+            - '@KejawenLab\Application\SemartHris\Repository\HolidayRepository'
+            - '@Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface'
+            - '%env(bool:SEMART_OVERTIME_AUTO_APPROVED)%'
+        tags:
+            - { name: 'doctrine.event_subscriber' }
+
+    KejawenLab\Application\SemartHris\EventListener\SetAbsentWhenLeaveIsSubmitedSubscriber:
+        lazy: true
+        arguments:
+            - '@KejawenLab\Application\SemartHris\Component\Leave\Service\SetAbsentWhenLeaveIsSubmited'
+        tags:
+            - { name: 'doctrine.event_subscriber' }
+
+    KejawenLab\Application\SemartHris\EventListener\ExceptionSubscriber:
+        lazy: true
+        arguments:
+            - '@Symfony\Component\Serializer\SerializerInterface'
+            - '@Psr\Log\LoggerInterface'
+        tags:
+            - { name: 'kernel.event_subscriber' }

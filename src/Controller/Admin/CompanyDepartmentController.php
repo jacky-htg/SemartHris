@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KejawenLab\Application\SemartHris\Controller\Admin;
 
 use Doctrine\ORM\QueryBuilder;
@@ -13,7 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
- * @author Muhamad Surya Iksanudin <surya.iksanudin@kejawenlab.com>
+ * @author Muhamad Surya Iksanudin <surya.iksanudin@gmail.com>
  */
 class CompanyDepartmentController extends AdminController
 {
@@ -33,11 +35,12 @@ class CompanyDepartmentController extends AdminController
 
         $session = $this->get('session');
         $session->set('companyId', $company->getId());
+        $session->set('companyCode', $company->getCode());
 
-        return $this->redirectToRoute('easyadmin', array(
+        return $this->redirectToRoute('easyadmin', [
             'action' => 'list',
             'entity' => 'CompanyDepartment',
-        ));
+        ]);
     }
 
     /**
@@ -47,12 +50,12 @@ class CompanyDepartmentController extends AdminController
     {
         $session = $this->get('session');
         if (!$session->get('companyId')) {
-            return $this->redirectToRoute('easyadmin', array(
+            return $this->redirectToRoute('easyadmin', [
                 'action' => 'list',
                 'sortField' => 'name',
                 'sortDirection' => 'DESC',
                 'entity' => 'Company',
-            ));
+            ]);
         }
 
         return parent::listAction();
@@ -96,7 +99,7 @@ class CompanyDepartmentController extends AdminController
      */
     protected function createListQueryBuilder($entityClass, $sortDirection, $sortField = null, $dqlFilter = null)
     {
-        return $this->container->get(CompanyRepository::class)->createCompanyDepartmentQueryBuilder($sortField, $sortDirection, $dqlFilter);
+        return $this->container->get(CompanyRepository::class)->createDepartmentQueryBuilder($sortField, $sortDirection, $dqlFilter);
     }
 
     /**
@@ -111,6 +114,6 @@ class CompanyDepartmentController extends AdminController
      */
     protected function createSearchQueryBuilder($entityClass, $searchQuery, array $searchableFields, $sortField = null, $sortDirection = null, $dqlFilter = null)
     {
-        return $this->container->get(CompanyRepository::class)->createCompanyDepartmentQueryBuilder($sortField, $sortDirection, $dqlFilter);
+        return $this->container->get(CompanyRepository::class)->createSearchDepartmentQueryBuilder($searchQuery, $sortField, $sortDirection, $dqlFilter);
     }
 }

@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KejawenLab\Application\SemartHris\Component\Company\Model;
 
 /**
- * @author Muhamad Surya Iksanudin <surya.iksanudin@kejawenlab.com>
+ * @author Muhamad Surya Iksanudin <surya.iksanudin@gmail.com>
  */
 interface CompanyDepartmentInterface
 {
@@ -20,7 +22,7 @@ interface CompanyDepartmentInterface
     /**
      * @param CompanyInterface|null $company
      */
-    public function setCompany(CompanyInterface $company = null): void;
+    public function setCompany(?CompanyInterface $company): void;
 
     /**
      * @return null|DepartmentInterface
@@ -30,5 +32,5 @@ interface CompanyDepartmentInterface
     /**
      * @param DepartmentInterface|null $department
      */
-    public function setDepartment(DepartmentInterface $department = null): void;
+    public function setDepartment(?DepartmentInterface $department): void;
 }

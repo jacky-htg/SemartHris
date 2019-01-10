@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KejawenLab\Application\SemartHris\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -34,7 +36,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @Gedmo\SoftDeleteable(fieldName="deletedAt")
  *
- * @author Muhamad Surya Iksanudin <surya.iksanudin@kejawenlab.id>
+ * @author Muhamad Surya Iksanudin <surya.iksanudin@gmail.com>
  */
 class JobTitle implements JobTitleInterface
 {
@@ -105,7 +107,7 @@ class JobTitle implements JobTitleInterface
     /**
      * @param JobLevelInterface|null $jobLevel
      */
-    public function setJobLevel(JobLevelInterface $jobLevel = null): void
+    public function setJobLevel(?JobLevelInterface $jobLevel): void
     {
         $this->jobLevel = $jobLevel;
     }

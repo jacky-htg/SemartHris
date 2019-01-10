@@ -4,6 +4,8 @@ parameters:
     locale: 'id'
 
 services:
+    _defaults:
+        public: true
     KejawenLab\Application\SemartHris\Util\FileUtil:
         lazy: true
         arguments:
@@ -64,10 +66,10 @@ services:
     KejawenLab\Application\SemartHris\Component\Attendance\Service\AttendanceImporter:
         lazy: true
         arguments:
-            - '@KejawenLab\Application\SemartHris\Component\Attendance\Service\AttendanceCalculator'
             - '@KejawenLab\Application\SemartHris\Repository\EmployeeRepository'
             - '@KejawenLab\Application\SemartHris\Repository\ReasonRepository'
             - '@KejawenLab\Application\SemartHris\Repository\AttendanceRepository'
+            - '@KejawenLab\Application\SemartHris\Component\Setting\Service\Setting'
             - 'KejawenLab\Application\SemartHris\Entity\Attendance'
 
     KejawenLab\Application\SemartHris\Component\Attendance\Rule\AttendanceRule:
@@ -82,6 +84,7 @@ services:
             - '@KejawenLab\Application\SemartHris\Repository\ReasonRepository'
             - '@KejawenLab\Application\SemartHris\Repository\WorkshiftRepository'
             - '%env(string:SEMART_ATTENDANCE_DEFAULT_ABSENT_REASON_CODE)%'
+            - '%env(int:SEMART_ATTENDANCE_CUT_OFF_DATE)%'
             - 'KejawenLab\Application\SemartHris\Entity\Attendance'
 
     KejawenLab\Application\SemartHris\Security\Service\PasswordSetter:
@@ -123,14 +126,165 @@ services:
             - '@KejawenLab\Application\SemartHris\Component\Overtime\Service\OvertimeChecker'
             - '@KejawenLab\Application\SemartHris\Component\Overtime\Calculator\OvertimeCalculator'
             - '@KejawenLab\Application\SemartHris\Repository\WorkshiftRepository'
+            - '@KejawenLab\Application\SemartHris\Component\Setting\Service\Setting'
             - '%env(int:SEMART_WORKDAY_PER_WEEK)%'
+
+    KejawenLab\Application\SemartHris\Component\Overtime\Service\OvertimeImporter:
+        lazy: true
+        arguments:
+            - '@KejawenLab\Application\SemartHris\Component\Overtime\Service\OvertimeCalculator'
+            - '@KejawenLab\Application\SemartHris\Repository\OvertimeRepository'
+            - '@KejawenLab\Application\SemartHris\Repository\EmployeeRepository'
+            - '@KejawenLab\Application\SemartHris\Component\Setting\Service\Setting'
+            - 'KejawenLab\Application\SemartHris\Entity\Overtime'
+
+    KejawenLab\Application\SemartHris\Component\Overtime\Service\OvertimeProcessor:
+        lazy: true
+        arguments:
+            - '@KejawenLab\Application\SemartHris\Repository\OvertimeRepository'
+            - '%env(int:SEMART_ATTENDANCE_CUT_OFF_DATE)%'
 
     KejawenLab\Application\SemartHris\Component\Salary\Service\WorkdayCalculator:
         lazy: true
         arguments:
             - '@KejawenLab\Application\SemartHris\Repository\HolidayRepository'
 
-    KejawenLab\Application\SemartHris\Component\Setting\Setting:
+    KejawenLab\Application\SemartHris\Component\Salary\Processor\PayrollProcessor:
+        lazy: true
+
+    KejawenLab\Application\SemartHris\Component\Tax\Processor\TaxProcessor:
         lazy: true
         arguments:
+            - '@KejawenLab\Application\SemartHris\Repository\PayrollRepository'
+
+    KejawenLab\Application\SemartHris\Component\Tax\Service\TaxProcessor:
+        lazy: true
+        arguments:
+            - '@KejawenLab\Application\SemartHris\Component\Tax\Processor\TaxProcessor'
+            - '@KejawenLab\Application\SemartHris\Repository\TaxRepository'
+            - '@KejawenLab\Application\SemartHris\Repository\SalaryComponentRepository'
+            - '@KejawenLab\Application\SemartHris\Repository\PayrollRepository'
+            - '@KejawenLab\Application\SemartHris\Component\Setting\Service\Setting'
+            - 'KejawenLab\Application\SemartHris\Entity\Tax'
+
+    KejawenLab\Application\SemartHris\Component\Salary\Processor\AttendanceProcessor:
+        lazy: true
+        arguments:
+            - '@KejawenLab\Application\SemartHris\Component\Salary\Service\WorkdayCalculator'
+            - '@KejawenLab\Application\SemartHris\Repository\AttendanceRepository'
+            - '@KejawenLab\Application\SemartHris\Repository\OvertimeRepository'
+            - '@KejawenLab\Application\SemartHris\Repository\AttendanceSummaryRepository'
+            - '@KejawenLab\Application\SemartHris\Component\Setting\Service\Setting'
+            - '%env(int:SEMART_ATTENDANCE_CUT_OFF_DATE)%'
+            - 'KejawenLab\Application\SemartHris\Entity\AttendanceSummary'
+        tags:
+            { name: 'semarthris.payroll_processor' }
+
+    KejawenLab\Application\SemartHris\Component\Salary\Processor\SalaryProcessor:
+        lazy: true
+        arguments:
+            - '@KejawenLab\Application\SemartHris\Component\Encryptor\Encryptor'
+            - '@KejawenLab\Application\SemartHris\Repository\SalaryComponentRepository'
+            - '@KejawenLab\Application\SemartHris\Repository\SalaryBenefitRepository'
+            - '@KejawenLab\Application\SemartHris\Repository\SalaryAllowanceRepository'
+            - '@KejawenLab\Application\SemartHris\Repository\PayrollRepository'
+            - '@KejawenLab\Application\SemartHris\Repository\PayrollPeriodRepository'
+        tags:
+            { name: 'semarthris.payroll_processor' }
+
+    KejawenLab\Application\SemartHris\Component\Salary\Processor\OvertimeProcessor:
+        lazy: true
+        arguments:
+            - '@KejawenLab\Application\SemartHris\Repository\SalaryComponentRepository'
+            - '@KejawenLab\Application\SemartHris\Repository\AttendanceSummaryRepository'
+            - '@KejawenLab\Application\SemartHris\Repository\PayrollRepository'
+            - '@KejawenLab\Application\SemartHris\Component\Setting\Service\Setting'
+        tags:
+            { name: 'semarthris.salary_processor' }
+
+    KejawenLab\Application\SemartHris\Component\Salary\Processor\BpjsProcessor:
+        lazy: true
+        arguments:
+            - '@KejawenLab\Application\SemartHris\Repository\SalaryComponentRepository'
+            - '@KejawenLab\Application\SemartHris\Repository\PayrollRepository'
+            - '@KejawenLab\Application\SemartHris\Component\Setting\Service\Setting'
+        tags:
+            { name: 'semarthris.salary_processor' }
+
+    KejawenLab\Application\SemartHris\Component\Salary\Service\PayrollProcessor:
+        lazy: true
+        arguments:
+            - '@KejawenLab\Application\SemartHris\Component\Salary\Processor\PayrollProcessor'
+            - '@KejawenLab\Application\SemartHris\Repository\PayrollPeriodRepository'
+
+    KejawenLab\Application\SemartHris\Component\Salary\Service\ValidateBenefit:
+        lazy: true
+        arguments:
+            - '@KejawenLab\Application\SemartHris\Repository\PayrollRepository'
+
+    KejawenLab\Application\SemartHris\Component\Salary\Service\ChangeBenefit:
+        lazy: true
+        arguments:
+            - '@KejawenLab\Application\SemartHris\Repository\SalaryBenefitRepository'
+            - '@KejawenLab\Application\SemartHris\Component\Encryptor\Encryptor'
+
+    KejawenLab\Application\SemartHris\Component\Salary\Service\StoreAsCompanyCost:
+        lazy: true
+        arguments:
+            - '@KejawenLab\Application\SemartHris\Repository\PayrollRepository'
+
+    Symfony\Component\Dotenv\Dotenv:
+
+    KejawenLab\Application\SemartHris\Component\Setting\Provider\DotEnvProvider:
+        lazy: true
+        arguments:
+            - '@Symfony\Component\Dotenv\Dotenv'
             - '%kernel.project_dir%/.env'
+
+    KejawenLab\Application\SemartHris\Component\Setting\Service\Setting:
+        lazy: true
+        arguments:
+            - '@KejawenLab\Application\SemartHris\Component\Setting\Provider\DotEnvProvider'
+
+    KejawenLab\Application\SemartHris\Component\Encryptor\KeyLoader:
+        lazy: true
+        arguments:
+            - '%kernel.project_dir%%env(SEMART_PRIVATE_KEY_PATH)%'
+            - '%kernel.project_dir%%env(SEMART_PUBLIC_KEY_PATH)%'
+            - !php/const KejawenLab\Application\SemartHris\Kernel::SEMART_CANONICAL
+
+    KejawenLab\Application\SemartHris\Component\Encryptor\Encryptor:
+        lazy: true
+        arguments:
+            - '@KejawenLab\Application\SemartHris\Component\Encryptor\KeyLoader'
+
+    KejawenLab\Application\SemartHris\Component\Tax\Calculator\FirstRateTaxCalculator:
+        lazy: true
+        tags:
+            { name: 'semarthris.tax_calculator' }
+
+    KejawenLab\Application\SemartHris\Component\Tax\Calculator\SecondRateTaxCalculator:
+        lazy: true
+        calls:
+            - ['setPrevious', ['@KejawenLab\Application\SemartHris\Component\Tax\Calculator\FirstRateTaxCalculator']]
+        tags:
+            { name: 'semarthris.tax_calculator' }
+
+    KejawenLab\Application\SemartHris\Component\Tax\Calculator\ThirdRateTaxCalculator:
+        lazy: true
+        calls:
+            - ['setPrevious', ['@KejawenLab\Application\SemartHris\Component\Tax\Calculator\SecondRateTaxCalculator']]
+        tags:
+            { name: 'semarthris.tax_calculator' }
+
+    KejawenLab\Application\SemartHris\Component\Tax\Calculator\FourthRateTaxCalculator:
+        lazy: true
+        calls:
+            - ['setPrevious', ['@KejawenLab\Application\SemartHris\Component\Tax\Calculator\ThirdRateTaxCalculator']]
+        tags:
+            { name: 'semarthris.tax_calculator' }
+
+    KejawenLab\Application\SemartHris\Component\Leave\Service\SetAbsentWhenLeaveIsSubmited:
+        lazy: true
+        arguments:
+            - '@KejawenLab\Application\SemartHris\Repository\AttendanceRepository'

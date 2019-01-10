@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KejawenLab\Application\SemartHris\DependencyInjection\Compiler;
 
 use KejawenLab\Application\SemartHris\Component\Contract\Repository\ContractableRepositoryFactory;
@@ -8,7 +10,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * @author Muhamad Surya Iksanudin <surya.iksanudin@kejawenlab.com>
+ * @author Muhamad Surya Iksanudin <surya.iksanudin@gmail.com>
  */
 class ContractableRepositoryFactoryPass implements CompilerPassInterface
 {

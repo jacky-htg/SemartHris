@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KejawenLab\Application\SemartHris\Component\Job\Model;
 
 /**
- * @author Muhamad Surya Iksanudin <surya.iksanudin@kejawenlab.com>
+ * @author Muhamad Surya Iksanudin <surya.iksanudin@gmail.com>
  */
 interface JobLevelInterface
 {
@@ -25,10 +27,10 @@ interface JobLevelInterface
     /**
      * @return null|JobLevelInterface
      */
-    public function getParent(): ? JobLevelInterface;
+    public function getParent(): ? self;
 
     /**
      * @param JobLevelInterface|null $jobLevel
      */
-    public function setParent(JobLevelInterface $jobLevel = null): void;
+    public function setParent(?self $jobLevel): void;
 }

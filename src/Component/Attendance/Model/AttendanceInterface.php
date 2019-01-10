@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KejawenLab\Application\SemartHris\Component\Attendance\Model;
 
 use KejawenLab\Application\SemartHris\Component\Employee\Model\EmployeeInterface;
 use KejawenLab\Application\SemartHris\Component\Reason\Model\ReasonInterface;
 
 /**
- * @author Muhamad Surya Iksanudin <surya.iksanudin@kejawenlab.com>
+ * @author Muhamad Surya Iksanudin <surya.iksanudin@gmail.com>
  */
 interface AttendanceInterface
 {
@@ -23,7 +25,7 @@ interface AttendanceInterface
     /**
      * @param EmployeeInterface|null $employee
      */
-    public function setEmployee(EmployeeInterface $employee = null): void;
+    public function setEmployee(?EmployeeInterface $employee): void;
 
     /**
      * @return null|ShiftmentInterface
@@ -33,7 +35,7 @@ interface AttendanceInterface
     /**
      * @param ShiftmentInterface|null $shiftment
      */
-    public function setShiftment(ShiftmentInterface $shiftment = null): void;
+    public function setShiftment(?ShiftmentInterface $shiftment): void;
 
     /**
      * @return \DateTimeInterface
@@ -43,7 +45,7 @@ interface AttendanceInterface
     /**
      * @param \DateTimeInterface|null $date
      */
-    public function setAttendanceDate(\DateTimeInterface $date = null): void;
+    public function setAttendanceDate(?\DateTimeInterface $date): void;
 
     /**
      * @return null|string
@@ -51,9 +53,9 @@ interface AttendanceInterface
     public function getDescription(): ? string;
 
     /**
-     * @param string $description
+     * @param null|string $description
      */
-    public function setDescription(string $description): void;
+    public function setDescription(?string $description): void;
 
     /**
      * @return \DateTimeInterface|null
@@ -63,7 +65,7 @@ interface AttendanceInterface
     /**
      * @param \DateTimeInterface|null $time
      */
-    public function setCheckIn(\DateTimeInterface $time = null): void;
+    public function setCheckIn(?\DateTimeInterface $time): void;
 
     /**
      * @return \DateTimeInterface|null
@@ -73,7 +75,7 @@ interface AttendanceInterface
     /**
      * @param \DateTimeInterface|null $time
      */
-    public function setCheckOut(\DateTimeInterface $time = null): void;
+    public function setCheckOut(?\DateTimeInterface $time): void;
 
     /**
      * @return int
@@ -133,5 +135,5 @@ interface AttendanceInterface
     /**
      * @param ReasonInterface $reason
      */
-    public function setReason(ReasonInterface $reason = null): void;
+    public function setReason(?ReasonInterface $reason): void;
 }

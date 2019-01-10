@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KejawenLab\Application\SemartHris\Repository;
 
 use Doctrine\ORM\EntityNotFoundException;
@@ -9,29 +11,14 @@ use KejawenLab\Application\SemartHris\Component\Address\Model\AddressInterface;
 use KejawenLab\Application\SemartHris\Util\StringUtil;
 
 /**
- * @author Muhamad Surya Iksanudin <surya.iksanudin@kejawenlab.com>
+ * @author Muhamad Surya Iksanudin <surya.iksanudin@gmail.com>
  */
 trait AddressRepositoryTrait
 {
-    /**
-     * @param AddressInterface $address
-     */
-    public function unsetDefaultExcept(AddressInterface $address): void
-    {
-        $queryBuilder = $this->entityManager->createQueryBuilder();
-        $queryBuilder->select('o');
-        $queryBuilder->from($this->getEntityClass(), 'o');
-        $queryBuilder->update();
-        $queryBuilder->set('o.defaultAddress', $queryBuilder->expr()->literal(false));
-        $queryBuilder->andWhere($queryBuilder->expr()->neq('o.id', $queryBuilder->expr()->literal($address->getId())));
-
-        $queryBuilder->getQuery()->execute();
-    }
-
     public function setRandomDefault(): AddressInterface
     {
         /** @var AddressInterface $other */
-        $other = $this->entityManager->getRepository($this->getEntityClass())->findOneBy(['defaultAddress' => false]);
+        $other = $this->entityManager->getRepository($this->getAddressClass())->findOneBy(['defaultAddress' => false]);
         if (!$other) {
             throw new EntityNotFoundException();
         }
@@ -58,7 +45,7 @@ trait AddressRepositoryTrait
      *
      * @return QueryBuilder
      */
-    protected function createSearchAddressQueryBuilder(QueryBuilder $queryBuilder, string $queryString): QueryBuilder
+    protected function buildSearchAddressQueryBuilder(QueryBuilder $queryBuilder, string $queryString): QueryBuilder
     {
         $queryBuilder->leftJoin('entity.region', 'region');
         $queryBuilder->orWhere('LOWER(region.code) LIKE :query');

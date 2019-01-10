@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KejawenLab\Application\SemartHris\Util;
 
 /**
- * @author Muhamad Surya Iksanudin <surya.iksanudin@kejawenlab.id>
+ * @author Muhamad Surya Iksanudin <surya.iksanudin@gmail.com>
  */
 class StringUtil
 {
@@ -60,11 +62,11 @@ class StringUtil
     }
 
     /**
-     * @param null $prefix
+     * @param null|string $prefix
      *
      * @return string
      */
-    public static function randomize($prefix = null): string
+    public static function randomize(?string $prefix): string
     {
         return sha1(uniqid($prefix, true));
     }

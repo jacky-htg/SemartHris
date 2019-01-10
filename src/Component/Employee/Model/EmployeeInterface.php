@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KejawenLab\Application\SemartHris\Component\Employee\Model;
 
 use KejawenLab\Application\SemartHris\Component\Address\Model\Addressable;
@@ -11,12 +13,13 @@ use KejawenLab\Application\SemartHris\Component\Employee\ContractType;
 use KejawenLab\Application\SemartHris\Component\Employee\Gender;
 use KejawenLab\Application\SemartHris\Component\Employee\IdentityType;
 use KejawenLab\Application\SemartHris\Component\Employee\MaritalStatus;
+use KejawenLab\Application\SemartHris\Component\Employee\RiskRatio;
 use KejawenLab\Application\SemartHris\Component\Job\Model\JobLevelInterface;
 use KejawenLab\Application\SemartHris\Component\Job\Model\JobTitleInterface;
-use KejawenLab\Application\SemartHris\Component\Tax\IndonesianTaxType;
+use KejawenLab\Application\SemartHris\Component\Tax\TaxGroup;
 
 /**
- * @author Muhamad Surya Iksanudin <surya.iksanudin@kejawenlab.com>
+ * @author Muhamad Surya Iksanudin <surya.iksanudin@gmail.com>
  */
 interface EmployeeInterface extends Addressable
 {
@@ -50,7 +53,7 @@ interface EmployeeInterface extends Addressable
     /**
      * @param CompanyInterface $company
      */
-    public function setCompany(CompanyInterface $company = null): void;
+    public function setCompany(?CompanyInterface $company): void;
 
     /**
      * @return null|DepartmentInterface
@@ -60,7 +63,7 @@ interface EmployeeInterface extends Addressable
     /**
      * @param DepartmentInterface $department
      */
-    public function setDepartment(DepartmentInterface $department = null): void;
+    public function setDepartment(?DepartmentInterface $department): void;
 
     /**
      * @return JobLevelInterface|null
@@ -70,7 +73,7 @@ interface EmployeeInterface extends Addressable
     /**
      * @param JobLevelInterface|null $jobLevel
      */
-    public function setJobLevel(JobLevelInterface $jobLevel = null): void;
+    public function setJobLevel(?JobLevelInterface $jobLevel): void;
 
     /**
      * @return null|JobTitleInterface
@@ -80,7 +83,7 @@ interface EmployeeInterface extends Addressable
     /**
      * @param JobTitleInterface $jobTitle
      */
-    public function setJobTitle(JobTitleInterface $jobTitle = null): void;
+    public function setJobTitle(?JobTitleInterface $jobTitle): void;
 
     /**
      * @return string
@@ -107,7 +110,7 @@ interface EmployeeInterface extends Addressable
     /**
      * @param RegionInterface $region
      */
-    public function setRegionOfBirth(RegionInterface $region = null): void;
+    public function setRegionOfBirth(?RegionInterface $region): void;
 
     /**
      * @return null|CityInterface
@@ -117,7 +120,7 @@ interface EmployeeInterface extends Addressable
     /**
      * @param CityInterface $city
      */
-    public function setCityOfBirth(CityInterface $city = null): void;
+    public function setCityOfBirth(?CityInterface $city): void;
 
     /**
      * @return \DateTimeInterface
@@ -154,16 +157,6 @@ interface EmployeeInterface extends Addressable
     public function setHaveOvertimeBenefit(bool $haveOvertimeBenefit): void;
 
     /**
-     * @return float
-     */
-    public function getBasicSalary(): float;
-
-    /**
-     * @param float $basicSalary
-     */
-    public function setBasicSalary(float $basicSalary): void;
-
-    /**
      * @return int
      */
     public function getLeaveBalance(): int;
@@ -176,14 +169,35 @@ interface EmployeeInterface extends Addressable
     /**
      * @return string
      *
-     * @see IndonesianTaxType
+     * @see TaxGroup
      */
     public function getTaxGroup(): string;
+
+    /**
+     * @param null|string $taxGroup
+     *
+     * @see TaxGroup
+     */
+    public function setTaxGroup(?string $taxGroup): void;
 
     /**
      * @return bool
      */
     public function isHaveOvertimeBenefit(): bool;
+
+    /**
+     * @return string
+     *
+     * @see RiskRatio
+     */
+    public function getRiskRatio(): ? string;
+
+    /**
+     * @param null|string $riskRatio
+     *
+     * @see RiskRatio
+     */
+    public function setRiskRatio(?string $riskRatio): void;
 
     /**
      * @return bool

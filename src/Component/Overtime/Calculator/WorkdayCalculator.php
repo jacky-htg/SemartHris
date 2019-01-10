@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KejawenLab\Application\SemartHris\Component\Overtime\Calculator;
 
 use KejawenLab\Application\SemartHris\Component\Overtime\Model\OvertimeInterface;
 
 /**
- * @author Muhamad Surya Iksanudin <surya.iksanudin@kejawenlab.com>
+ * @author Muhamad Surya Iksanudin <surya.iksanudin@gmail.com>
  *
  * @see https://gajimu.com/main/pekerjaan-yanglayak/kompensasi/upah-lembur
  */
@@ -21,6 +23,7 @@ class WorkdayCalculator extends Calculator
         }
 
         $hours = $this->getOvertimeHours($overtime);
+        $overtime->setRawValue($hours);
         //1 first hour multiply with 1.5
         $calculatedValue = 1.5 * 1;
         --$hours;

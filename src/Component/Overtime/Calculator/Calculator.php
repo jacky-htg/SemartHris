@@ -1,12 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KejawenLab\Application\SemartHris\Component\Overtime\Calculator;
 
-use KejawenLab\Application\SemartHris\Component\Overtime\Model\OvertimeCalculatorInterface;
 use KejawenLab\Application\SemartHris\Component\Overtime\Model\OvertimeInterface;
+use KejawenLab\Application\SemartHris\Component\Setting\Service\Setting;
+use KejawenLab\Application\SemartHris\Component\Setting\SettingKey;
 
 /**
- * @author Muhamad Surya Iksanudin <surya.iksanudin@kejawenlab.com>
+ * @author Muhamad Surya Iksanudin <surya.iksanudin@gmail.com>
  */
 abstract class Calculator implements OvertimeCalculatorInterface
 {
@@ -14,6 +17,11 @@ abstract class Calculator implements OvertimeCalculatorInterface
      * @var int
      */
     protected $workday;
+
+    /**
+     * @var Setting
+     */
+    protected $setting;
 
     /**
      * @param int $workday
@@ -24,6 +32,14 @@ abstract class Calculator implements OvertimeCalculatorInterface
     }
 
     /**
+     * @param Setting $setting
+     */
+    public function setSetingg(Setting $setting): void
+    {
+        $this->setting = $setting;
+    }
+
+    /**
      * @param OvertimeInterface $overtime
      *
      * @return float
@@ -31,8 +47,22 @@ abstract class Calculator implements OvertimeCalculatorInterface
     protected function getOvertimeHours(OvertimeInterface $overtime): float
     {
         /** @var \DateTime $endHour */
-        $endHour = $overtime->getEndHour();
-        $startHour = $overtime->getStartHour();
+        $endHour = \DateTime::createFromFormat(
+            $this->setting->get(SettingKey::DATE_TIME_FORMAT),
+            sprintf('%s %s',
+                date($this->setting->get(SettingKey::DATE_FORMAT)),
+                $overtime->getEndHour()->format($this->setting->get(SettingKey::TIME_FORMAT))
+            )
+        );
+
+        $startHour = \DateTime::createFromFormat(
+            $this->setting->get(SettingKey::DATE_TIME_FORMAT),
+            sprintf('%s %s',
+                date($this->setting->get(SettingKey::DATE_FORMAT)),
+                $overtime->getStartHour()->format($this->setting->get(SettingKey::TIME_FORMAT))
+            )
+        );
+
         if ($endHour < $startHour) {
             $endHour->add(new \DateInterval('P1D'));
             $overtime->setOverday(true);
@@ -40,7 +70,7 @@ abstract class Calculator implements OvertimeCalculatorInterface
             $overtime->setOverday(false);
         }
 
-        $delta = $overtime->getEndHour()->diff($startHour, true);
+        $delta = $endHour->diff($startHour, true);
         $hours = $delta->h;
         $minutes = $delta->i;
         if (15 < $minutes) {//Minute adjustment

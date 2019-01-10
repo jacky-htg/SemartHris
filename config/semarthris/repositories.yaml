@@ -1,0 +1,146 @@
+services:
+    _defaults:
+        public: true
+    KejawenLab\Application\SemartHris\Repository\CompanyRepository:
+        lazy: true
+        arguments:
+            - '@Doctrine\ORM\EntityManagerInterface'
+            - '@Symfony\Component\HttpFoundation\Session\SessionInterface'
+        tags:
+            { name: 'semarthris.address_repository' }
+
+    KejawenLab\Application\SemartHris\Repository\CityRepository:
+        lazy: true
+        calls:
+            - ['initialize', ['@Doctrine\ORM\EntityManagerInterface', 'KejawenLab\Application\SemartHris\Entity\City']]
+
+    KejawenLab\Application\SemartHris\Repository\RegionRepository:
+        lazy: true
+        calls:
+            - ['initialize', ['@Doctrine\ORM\EntityManagerInterface', 'KejawenLab\Application\SemartHris\Entity\Region']]
+
+    KejawenLab\Application\SemartHris\Repository\DepartmentRepository:
+        lazy: true
+        calls:
+            - ['initialize', ['@Doctrine\ORM\EntityManagerInterface', 'KejawenLab\Application\SemartHris\Entity\Department']]
+
+    KejawenLab\Application\SemartHris\Repository\JobTitleRepository:
+        lazy: true
+        calls:
+            - ['initialize', ['@Doctrine\ORM\EntityManagerInterface', 'KejawenLab\Application\SemartHris\Entity\JobTitle']]
+
+    KejawenLab\Application\SemartHris\Repository\JobLevelRepository:
+        lazy: true
+        calls:
+            - ['initialize', ['@Doctrine\ORM\EntityManagerInterface', 'KejawenLab\Application\SemartHris\Entity\JobLevel']]
+
+    KejawenLab\Application\SemartHris\Repository\EmployeeRepository:
+        lazy: true
+        arguments:
+            - '@Symfony\Component\HttpFoundation\Session\SessionInterface'
+        calls:
+            - ['initialize', ['@Doctrine\ORM\EntityManagerInterface', 'KejawenLab\Application\SemartHris\Entity\Employee']]
+        tags:
+            - { name: 'semarthris.address_repository' }
+            - { name: 'semarthris.contract_repository' }
+
+    KejawenLab\Application\SemartHris\Repository\ContractRepository:
+        lazy: true
+        calls:
+            - ['initialize', ['@Doctrine\ORM\EntityManagerInterface', 'KejawenLab\Application\SemartHris\Entity\Contract']]
+
+    KejawenLab\Application\SemartHris\Repository\PlacementRepository:
+        lazy: true
+        calls:
+            - ['initialize', ['@Doctrine\ORM\EntityManagerInterface', 'KejawenLab\Application\SemartHris\Entity\Placement']]
+        tags:
+            - { name: 'semarthris.contract_repository' }
+
+    KejawenLab\Application\SemartHris\Repository\CareerHistoryRepository:
+        lazy: true
+        calls:
+            - ['initialize', ['@Doctrine\ORM\EntityManagerInterface', 'KejawenLab\Application\SemartHris\Entity\CareerHistory']]
+
+    KejawenLab\Application\SemartHris\Repository\WorkshiftRepository:
+        lazy: true
+        calls:
+            - ['initialize', ['@Doctrine\ORM\EntityManagerInterface', 'KejawenLab\Application\SemartHris\Entity\Workshift']]
+
+    KejawenLab\Application\SemartHris\Repository\ShiftmentRepository:
+        lazy: true
+        calls:
+            - ['initialize', ['@Doctrine\ORM\EntityManagerInterface', 'KejawenLab\Application\SemartHris\Entity\Shiftment']]
+
+    KejawenLab\Application\SemartHris\Repository\AttendanceRepository:
+        lazy: true
+        arguments:
+            - '@KejawenLab\Application\SemartHris\Component\Setting\Service\Setting'
+        calls:
+            - ['initialize', ['@Doctrine\ORM\EntityManagerInterface', 'KejawenLab\Application\SemartHris\Entity\Attendance']]
+
+    KejawenLab\Application\SemartHris\Repository\ReasonRepository:
+        lazy: true
+        calls:
+            - ['initialize', ['@Doctrine\ORM\EntityManagerInterface', 'KejawenLab\Application\SemartHris\Entity\Reason']]
+
+    KejawenLab\Application\SemartHris\Repository\HolidayRepository:
+        lazy: true
+        arguments:
+            - '%env(string:SEMART_OFFDAY_PER_WEEK)%'
+        calls:
+            - ['initialize', ['@Doctrine\ORM\EntityManagerInterface', 'KejawenLab\Application\SemartHris\Entity\Holiday']]
+
+    KejawenLab\Application\SemartHris\Repository\OvertimeRepository:
+        lazy: true
+        arguments:
+            - '@KejawenLab\Application\SemartHris\Component\Setting\Service\Setting'
+        calls:
+            - ['initialize', ['@Doctrine\ORM\EntityManagerInterface', 'KejawenLab\Application\SemartHris\Entity\Overtime']]
+
+    KejawenLab\Application\SemartHris\Repository\SalaryComponentRepository:
+        lazy: true
+        arguments:
+            - '@KejawenLab\Application\SemartHris\Component\Setting\Service\Setting'
+            - ['%env(SEMART_PAYROLL_BPJS_JKK_CODE)%', '%env(SEMART_PAYROLL_BPJS_JKM_CODE)%', '%env(SEMART_PAYROLL_BPJS_JHT_CODE_PLUS)%', '%env(SEMART_PAYROLL_BPJS_JHT_CODE_MINUS)%', '%env(SEMART_PAYROLL_BPJS_JHT_CODE_COMPANY)%', '%env(SEMART_PAYROLL_BPJS_JP_CODE_PLUS)%', '%env(SEMART_PAYROLL_BPJS_JP_CODE_MINUS)%', '%env(SEMART_PAYROLL_BPJS_JP_CODE_COMPANY)%', '%env(SEMART_TAX_PLUS_CODE)%', '%env(SEMART_TAX_MINUS_CODE)%' ]
+        calls:
+            - ['initialize', ['@Doctrine\ORM\EntityManagerInterface', 'KejawenLab\Application\SemartHris\Entity\SalaryComponent']]
+
+    KejawenLab\Application\SemartHris\Repository\PayrollPeriodRepository:
+        lazy: true
+        calls:
+            - ['initialize', ['@Doctrine\ORM\EntityManagerInterface', 'KejawenLab\Application\SemartHris\Entity\PayrollPeriod']]
+
+    KejawenLab\Application\SemartHris\Repository\AttendanceSummaryRepository:
+        lazy: true
+        calls:
+            - ['initialize', ['@Doctrine\ORM\EntityManagerInterface', 'KejawenLab\Application\SemartHris\Entity\AttendanceSummary']]
+
+    KejawenLab\Application\SemartHris\Repository\SalaryAllowanceRepository:
+        lazy: true
+        calls:
+            - ['initialize', ['@Doctrine\ORM\EntityManagerInterface', 'KejawenLab\Application\SemartHris\Entity\SalaryAllowance']]
+
+    KejawenLab\Application\SemartHris\Repository\TaxRepository:
+        lazy: true
+        calls:
+            - ['initialize', ['@Doctrine\ORM\EntityManagerInterface', 'KejawenLab\Application\SemartHris\Entity\Tax']]
+
+    KejawenLab\Application\SemartHris\Repository\SalaryBenefitRepository:
+        lazy: true
+        arguments:
+            - ['%env(SEMART_PAYROLL_BPJS_JKK_CODE)%', '%env(SEMART_PAYROLL_BPJS_JKM_CODE)%', '%env(SEMART_PAYROLL_BPJS_JHT_CODE_PLUS)%', '%env(SEMART_PAYROLL_BPJS_JHT_CODE_MINUS)%', '%env(SEMART_PAYROLL_BPJS_JHT_CODE_COMPANY)%', '%env(SEMART_PAYROLL_BPJS_JP_CODE_PLUS)%', '%env(SEMART_PAYROLL_BPJS_JP_CODE_MINUS)%', '%env(SEMART_PAYROLL_BPJS_JP_CODE_COMPANY)%']
+        calls:
+            - ['initialize', ['@Doctrine\ORM\EntityManagerInterface', 'KejawenLab\Application\SemartHris\Entity\SalaryBenefit']]
+
+    KejawenLab\Application\SemartHris\Repository\PayrollRepository:
+        lazy: true
+        arguments:
+            - 'KejawenLab\Application\SemartHris\Entity\PayrollDetail'
+            - 'KejawenLab\Application\SemartHris\Entity\CompanyPayrollCost'
+        calls:
+            - ['initialize', ['@Doctrine\ORM\EntityManagerInterface', 'KejawenLab\Application\SemartHris\Entity\Payroll']]
+
+    KejawenLab\Application\SemartHris\Repository\SalaryBenefitHistoryRepository:
+        lazy: true
+        calls:
+            - ['initialize', ['@Doctrine\ORM\EntityManagerInterface', 'KejawenLab\Application\SemartHris\Entity\SalaryBenefitHistory']]

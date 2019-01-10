@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KejawenLab\Application\SemartHris\Form\EventListener;
 
 use KejawenLab\Application\SemartHris\Component\Address\Service\DefaultAddressChecker;
@@ -8,7 +10,7 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 
 /**
- * @author Muhamad Surya Iksanudin <surya.iksanudin@kejawenlab.com>
+ * @author Muhamad Surya Iksanudin <surya.iksanudin@gmail.com>
  */
 class DefaultAddressCheckerSubscriber implements EventSubscriberInterface
 {

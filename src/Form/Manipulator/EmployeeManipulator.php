@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KejawenLab\Application\SemartHris\Form\Manipulator;
 
 use KejawenLab\Application\SemartHris\Entity\Employee;
@@ -8,7 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
- * @author Muhamad Surya Iksanudin <surya.iksanudin@kejawenlab.com>
+ * @author Muhamad Surya Iksanudin <surya.iksanudin@gmail.com>
  */
 class EmployeeManipulator extends FormManipulator implements FormManipulatorInterface
 {
@@ -118,6 +120,18 @@ class EmployeeManipulator extends FormManipulator implements FormManipulatorInte
             $formBuilder->remove('supervisor_empty');
             $formBuilder->remove('supervisor_text');
             $formBuilder->get('supervisor_readonly')->setData($supervisorEntity);
+        }
+
+        if ($entity->getId()) {
+            $formBuilder->remove('riskRatio');
+        } else {
+            $formBuilder->remove('riskRatio_text');
+        }
+
+        if ($entity->getId()) {
+            $formBuilder->remove('taxGroup');
+        } else {
+            $formBuilder->remove('taxGroup_text');
         }
 
         return $formBuilder;

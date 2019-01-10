@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KejawenLab\Application\SemartHris\Component\Overtime\Model;
 
 use KejawenLab\Application\SemartHris\Component\Attendance\Model\ShiftmentInterface;
 use KejawenLab\Application\SemartHris\Component\Employee\Model\EmployeeInterface;
 
 /**
- * @author Muhamad Surya Iksanudin <surya.iksanudin@kejawenlab.com>
+ * @author Muhamad Surya Iksanudin <surya.iksanudin@gmail.com>
  */
 interface OvertimeInterface
 {
@@ -33,7 +35,7 @@ interface OvertimeInterface
     /**
      * @param ShiftmentInterface|null $shiftment
      */
-    public function setShiftment(ShiftmentInterface $shiftment = null): void;
+    public function setShiftment(?ShiftmentInterface $shiftment): void;
 
     /**
      * @return \DateTimeInterface|null
@@ -41,9 +43,9 @@ interface OvertimeInterface
     public function getOvertimeDate(): ? \DateTimeInterface;
 
     /**
-     * @param \DateTimeInterface $date
+     * @param \DateTimeInterface|null $date
      */
-    public function setOvertimeDate(\DateTimeInterface $date): void;
+    public function setOvertimeDate(?\DateTimeInterface $date): void;
 
     /**
      * @return \DateTimeInterface|null
@@ -51,9 +53,9 @@ interface OvertimeInterface
     public function getStartHour(): ? \DateTimeInterface;
 
     /**
-     * @param \DateTimeInterface $time
+     * @param \DateTimeInterface|null $time
      */
-    public function setStartHour(\DateTimeInterface $time): void;
+    public function setStartHour(?\DateTimeInterface $time): void;
 
     /**
      * @return \DateTimeInterface|null
@@ -61,9 +63,19 @@ interface OvertimeInterface
     public function getEndHour(): ? \DateTimeInterface;
 
     /**
-     * @param \DateTimeInterface $time
+     * @param \DateTimeInterface|null $time
      */
-    public function setEndHour(\DateTimeInterface $time): void;
+    public function setEndHour(?\DateTimeInterface $time): void;
+
+    /**
+     * @return float|null
+     */
+    public function getRawValue(): ? float;
+
+    /**
+     * @param float $overtime
+     */
+    public function setRawValue(float $overtime): void;
 
     /**
      * @return float|null
@@ -108,7 +120,7 @@ interface OvertimeInterface
     /**
      * @param EmployeeInterface|null $employee
      */
-    public function setApprovedBy(EmployeeInterface $employee = null): void;
+    public function setApprovedBy(?EmployeeInterface $employee): void;
 
     /**
      * @return null|string
@@ -116,7 +128,7 @@ interface OvertimeInterface
     public function getDescription(): ? string;
 
     /**
-     * @param string $description
+     * @param string|null $description
      */
-    public function setDescription(string $description): void;
+    public function setDescription(?string $description): void;
 }

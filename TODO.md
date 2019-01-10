@@ -39,7 +39,7 @@
 - [X] Set first user is Super Administrator
 - [X] Menejemen Hari Libur
 - [X] Authentication (Urgent)
-- [ ] Access Control List for All Menu
+- [X] Access Control List for All Menu
 - [X] Create Supervisor Voter
 - [X] Lembur Karyawan
 - [X] Setting jumlah hari kerja per minggu
@@ -53,8 +53,45 @@
 - [X] Attendance Rules
 - [X] Proses Absen per Karyawan
 - [X] Security!!! Very Urgent
-- [ ] Security Per Action
-- [ ] Penggajian
-- [ ] Delete Session Notification
-- [ ] Prevent Remove Mutation When Job History is Exist
-- [ ] Prevent Remove Placement When Job History is Exist
+- [X] Overtime Upload
+- [X] Proses Overtime
+- [X] Cek Ulang perhitungan lembur
+- [X] Komponen Gaji
+- [X] Periode Penggajian
+- [X] Benefit dan Pemotongan
+- [X] Remove sticky session is exist (Company and Employee)
+- [X] Security for Processing Attendance and Overtime
+- [X] Halaman Proses Gaji
+- [X] Proses Penggajian
+- [X] Summary Absensi Prosesor
+- [X] Lembur Prosesor
+- [X] Tunjangan/Potongan Prosesor
+- [X] Payroll History
+- [X] Perhitungan Lembur
+- [X] Validasi Proses Payroll harus melewati tanggal closing
+- [X] Payroll List Query Builder
+- [X] Form Tunjangan dan Potongan
+- [X] Filter Tunjangan dan Potongan List
+- [X] Filter Payroll Period
+- [X] Filter Propinsi di Kota (Bug di select2 list kota)
+- [X] Payroll Detail
+- [X] Filter Riwayat Absensi
+- [X] Benefit Harus Menggunakan Kontrak pada Perubahan Gaji
+- [X] Validasi UUID pada Repository
+- [X] Security Per Action
+- [X] Microcache Query
+- [X] BPJS Ketenagakerjaan
+- [X] BPJS Kesehatan (Tunjangan Tetap)
+- [X] Listener untuk Tunjangan dan Potongan simpan ke Company Cost
+- [X] Pecah Salary Processor dan Tambahkan Result Cache pada Fixed Salary
+- [X] Company Cost Report
+- [X] Mini Accounting untuk Mencatat Pengeluaran Perusahaan untuk Gaji
+- [X] Change address default listener to doctrine listener to avoid double listener
+- [X] PPH21
+- [X] Perubahan Tax Group dan Risk Ratio
+- [X] Validasi Tax Group dan Risk Ratio, Kalau Yang Baru Kosong, Pakai Yang Lama
+- [X] Add Leave Entity
+- [X] Add Leave Listener
+- [ ] Add Leave Approval
+- [ ] Leave Filtering and Searching
+- [ ] Created and Updated Log in List

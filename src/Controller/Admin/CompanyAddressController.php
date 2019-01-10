@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KejawenLab\Application\SemartHris\Controller\Admin;
 
 use Doctrine\ORM\QueryBuilder;
@@ -13,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @author Muhamad Surya Iksanudin <surya.iksanudin@kejawenlab.com>
+ * @author Muhamad Surya Iksanudin <surya.iksanudin@gmail.com>
  */
 class CompanyAddressController extends AdminController
 {
@@ -30,14 +32,15 @@ class CompanyAddressController extends AdminController
         if ($company) {
             $session = $this->get('session');
             $session->set('companyId', $company->getId());
+            $session->set('companyCode', $company->getCode());
         }
 
-        return $this->redirectToRoute('easyadmin', array(
+        return $this->redirectToRoute('easyadmin', [
             'action' => 'list',
             'sortField' => 'defaultAddress',
             'sortDirection' => 'DESC',
             'entity' => 'CompanyAddress',
-        ));
+        ]);
     }
 
     /**
@@ -47,7 +50,7 @@ class CompanyAddressController extends AdminController
     {
         $response = parent::editAction();
 
-        $companyAddress = $this->container->get(CompanyRepository::class)->findCompanyAddress($this->request->query->get('id'));
+        $companyAddress = $this->container->get(CompanyRepository::class)->findAddress($this->request->query->get('id'));
         if ($companyAddress) {
             $this->container->get(DefaultAddressChecker::class)->unsetDefaultExcept($companyAddress);
         }
@@ -60,7 +63,7 @@ class CompanyAddressController extends AdminController
      */
     protected function deleteAction()
     {
-        $companyAddress = $this->container->get(CompanyRepository::class)->findCompanyAddress($this->request->query->get('id'));
+        $companyAddress = $this->container->get(CompanyRepository::class)->findAddress($this->request->query->get('id'));
         if ($companyAddress && 'DELETE' === $this->request->getMethod()) {
             $this->container->get(DefaultAddressChecker::class)->setRandomDefault($companyAddress);
         }
@@ -104,7 +107,7 @@ class CompanyAddressController extends AdminController
      */
     protected function createListQueryBuilder($entityClass, $sortDirection, $sortField = null, $dqlFilter = null)
     {
-        return $this->container->get(CompanyRepository::class)->createCompanyAddressQueryBuilder($sortField, $sortDirection, $dqlFilter, null !== $this->get('session')->get('companyId'));
+        return $this->container->get(CompanyRepository::class)->createAddressQueryBuilder($sortField, $sortDirection, $dqlFilter, null !== $this->get('session')->get('companyId'));
     }
 
     /**
@@ -119,6 +122,6 @@ class CompanyAddressController extends AdminController
      */
     protected function createSearchQueryBuilder($entityClass, $searchQuery, array $searchableFields, $sortField = null, $sortDirection = null, $dqlFilter = null)
     {
-        return $this->container->get(CompanyRepository::class)->createSearchCompanyAddressQueryBuilder($searchQuery, $sortField, $sortDirection, $dqlFilter, null !== $this->get('session')->get('companyId'));
+        return $this->container->get(CompanyRepository::class)->createSearchAddressQueryBuilder($searchQuery, $sortField, $sortDirection, $dqlFilter, null !== $this->get('session')->get('companyId'));
     }
 }

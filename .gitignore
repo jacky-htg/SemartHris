@@ -1,8 +1,11 @@
 /.idea/
 /.DS_Store
 /uploads/images
+!/uploads/templates/attendance.csv
+!/uploads/templates/overtime.csv
+/uploads/overtimes/*
 /uploads/attendances/*
-!/uploads/attendances/template.csv
+/database/*
 ###> symfony/framework-bundle ###
 .env
 /public/bundles/
@@ -13,3 +16,7 @@
 ###> symfony/web-server-bundle ###
 .web-server-pid
 ###< symfony/web-server-bundle ###
+
+###> symfony/phpunit-bridge ###
+/phpunit.xml
+###< symfony/phpunit-bridge ###

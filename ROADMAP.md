@@ -5,13 +5,13 @@ Hal ini dilakukan agar SemartHRIS dikembangkan dengan tetap mengutamakan stabili
 
 ### Fase I
 
-- [X] Menejemen Perusahaan
-- [X] Menejemen Jabatan
-- [X] Menejemen Pendidikan
-- [X] Menejemen Alamat
-- [X] Menejemen Keahlian
+- [X] Manajemen Perusahaan
+- [X] Manajemen Jabatan
+- [X] Manajemen Pendidikan
+- [X] Manajemen Alamat
+- [X] Manajemen Keahlian
 - [X] Kontrak Kerja
-- [X] Menejemen Karyawan
+- [X] Manajemen Karyawan
 - [X] Promosi, Demosi, dan Mutasi Karyawan
 - [X] Penempatan Kerja
 - [X] Shift Kerja
@@ -19,14 +19,21 @@ Hal ini dilakukan agar SemartHRIS dikembangkan dengan tetap mengutamakan stabili
 - [X] Absensi
 - [X] Lembur
 - [X] Authorisasi dan Authentikasi
-- [ ] Penggajian
+- [X] Super Admin add extra field (is_deleted?)
+- [X] Restore Record when it is deleted
+- [X] Penggajian
 
 ### Fase II
 
-- [ ] Menejemen Cuti
-- [ ] PPH21
+- [X] BPJS Kesehatan
+- [X] BPJS Ketenagakerjaan
+- [ ] Manajemen Cuti
+- [X] PPH21
 - [ ] Relasi Karyawan (Keluarga, Keterampilan, dan lain sebagainya)
 - [ ] Perbaikan Performa, dan *Refactoring*
+- [ ] Simple Cache Management
+- [ ] Unit Test
+- [ ] Redis Session
 
 ### Fase III
 
@@ -34,18 +41,23 @@ Hal ini dilakukan agar SemartHRIS dikembangkan dengan tetap mengutamakan stabili
 - [ ] Perjalanan Dinas
 - [ ] Penilaian Karyawan
 - [ ] Plugin/Module System
+- [ ] Upload using File System, S3, and Others
 
 ### Fase IV
 
-- [ ] Perbaikan Arsitektur
+- [ ] Perbaikan Arsitektur (Decouple Component)
+- [ ] Mapping Entity Menggunakan XML
 - [ ] Perbaikan API
 - [ ] Perbaikan Tampilan
 - [ ] Translating Menu, Label, etc
+- [ ] Optimasi Search Query
 
 ### Fase V
 
-- [ ] Super Admin add extra field (is_deleted?)
-- [ ] Restore Record when it is deleted
+- [ ] Search Engine (Elasticsearch?)
+- [ ] Email Notification
+- [ ] Dokumentasi
 - [ ] Pre rilis
+- [ ] Installation Page
 - [ ] Perbaikan dan pemantapan sebelum rilis
 - [ ] Rilis

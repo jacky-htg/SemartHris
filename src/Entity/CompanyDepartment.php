@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KejawenLab\Application\SemartHris\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -30,7 +32,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @Gedmo\SoftDeleteable(fieldName="deletedAt")
  *
- * @author Muhamad Surya Iksanudin <surya.iksanudin@kejawenlab.id>
+ * @author Muhamad Surya Iksanudin <surya.iksanudin@gmail.com>
  */
 class CompanyDepartment implements CompanyDepartmentInterface
 {
@@ -90,7 +92,7 @@ class CompanyDepartment implements CompanyDepartmentInterface
     /**
      * @param DepartmentInterface|null $department
      */
-    public function setDepartment(DepartmentInterface $department = null): void
+    public function setDepartment(?DepartmentInterface $department): void
     {
         $this->department = $department;
     }
@@ -106,7 +108,7 @@ class CompanyDepartment implements CompanyDepartmentInterface
     /**
      * @param CompanyInterface|null $company
      */
-    public function setCompany(CompanyInterface $company = null): void
+    public function setCompany(?CompanyInterface $company): void
     {
         $this->company = $company;
     }

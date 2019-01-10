@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KejawenLab\Application\SemartHris\Component\Address\Repository;
 
 /**
- * @author Muhamad Surya Iksanudin <surya.iksanudin@kejawenlab.com>
+ * @author Muhamad Surya Iksanudin <surya.iksanudin@gmail.com>
  */
 class AddressRepositoryFactory
 {
@@ -19,6 +21,7 @@ class AddressRepositoryFactory
      */
     public function __construct(array $addressRepositories = [])
     {
+        $this->repositories = [];
         foreach ($addressRepositories as $addressRepository) {
             $this->addRepository($addressRepository);
         }
@@ -31,11 +34,11 @@ class AddressRepositoryFactory
      */
     public function getRepositoryFor(string $addressClasss): AddressRepositoryInterface
     {
-        if (!$repository = $this->repositories[$addressClasss]) {
+        if (!isset($this->repositories[$addressClasss])) {
             throw new \InvalidArgumentException(sprintf('Repository for class "%s" not found.', $addressClasss));
         }
 
-        return $repository;
+        return $this->repositories[$addressClasss];
     }
 
     /**
@@ -43,6 +46,6 @@ class AddressRepositoryFactory
      */
     private function addRepository(AddressRepositoryInterface $addressRepository): void
     {
-        $this->repositories[$addressRepository->getEntityClass()] = $addressRepository;
+        $this->repositories[$addressRepository->getAddressClass()] = $addressRepository;
     }
 }

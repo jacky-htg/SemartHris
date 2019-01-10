@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KejawenLab\Application\SemartHris\Component\Address\Model;
 
 /**
- * @author Muhamad Surya Iksanudin <surya.iksanudin@kejawenlab.com>
+ * @author Muhamad Surya Iksanudin <surya.iksanudin@gmail.com>
  */
 interface AddressInterface
 {
@@ -30,7 +32,7 @@ interface AddressInterface
     /**
      * @param RegionInterface|null $region
      */
-    public function setRegion(RegionInterface $region = null): void;
+    public function setRegion(?RegionInterface $region): void;
 
     /**
      * @return null|CityInterface
@@ -40,7 +42,7 @@ interface AddressInterface
     /**
      * @param CityInterface|null $city
      */
-    public function setCity(CityInterface $city = null): void;
+    public function setCity(?CityInterface $city): void;
 
     /**
      * @return string
@@ -83,7 +85,7 @@ interface AddressInterface
     public function setDefaultAddress(bool $default): void;
 
     /**
-     * @return Addressable
+     * @return Addressable|null
      */
-    public function getAddressable(): Addressable;
+    public function getAddressable(): ? Addressable;
 }

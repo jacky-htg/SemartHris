@@ -1,0 +1,198 @@
+{% extends 'app/default/list.html.twig' %}
+
+{% set _select2_locales = ['ar', 'az', 'bg', 'ca', 'cs', 'da', 'de', 'el', 'en', 'es', 'et', 'eu', 'fa', 'fi', 'fr', 'gl', 'he', 'hi', 'hr', 'hu', 'id', 'is', 'it', 'ja', 'km', 'ko', 'lt', 'lv', 'mk', 'ms', 'nb', 'nl', 'pl', 'pt-BR', 'pt', 'ro', 'ru', 'sk', 'sr-Cyrl', 'sr', 'sv', 'th', 'tr', 'uk', 'vi', 'zh-CN', 'zh-TW'] %}
+{% set _app_language = app.request.locale|split('-')|first|split('_')|first %}
+{% set _select2_locale = app.request.locale in _select2_locales
+    ? app.request.locale
+    : _app_language in _select2_locales ? _app_language : 'en'
+%}
+
+{% set _entity_config = easyadmin_entity(app.request.query.get('entity')) %}
+{% set startDate = app.request.query.get('startDate', date() | date('01-m-Y')) %}
+{%  set endDate = app.request.query.get('endDate', date() | date('t-m-Y')) %}
+{% set extraField = is_granted('ROLE_SUPER_ADMIN') ? 1 : 0 %}
+
+{% set _request_parameters = _request_parameters|default({})|merge({
+    action: app.request.query.get('action'),
+    entity: _entity_config.name,
+    menuIndex: app.request.query.get('menuIndex'),
+    submenuIndex: app.request.query.get('submenuIndex'),
+    sortField: app.request.query.get('sortField', ''),
+    startDate: startDate,
+    endDate: endDate,
+    sortDirection: app.request.query.get('sortDirection', 'DESC'),
+    page: app.request.query.get('page', 1)
+}) %}
+
+{% block new_action %}
+    <div class="button-action">
+        <a class="btn btn-primary process" href="#" type="button" title="{{ 'label.payroll.process_action' | trans({}, 'messages') }}">
+            <i class="fa fa-cogs"></i>
+            <span class="hidden-xs hidden-sm">{{ 'label.payroll.process_action' | trans({}, 'messages') }}</span>
+        </a>
+    </div>
+{% endblock new_action %}
+
+{% block main %}
+    {% set _list_item_actions = easyadmin_get_actions_for_list_item(_entity_config.name) %}
+
+    <div class="row">
+        <form method="get" action="{{ path('easyadmin') }}">
+            <input type="hidden" name="entity" value="{{ _request_parameters.entity }}">
+            <input type="hidden" name="sortField" value="{{ _entity_config.search.sort.field|default(_request_parameters.sortField) }}">
+            <input type="hidden" name="sortDirection" value="{{ _entity_config.search.sort.direction|default(_request_parameters.sortDirection) }}">
+            <input type="hidden" name="menuIndex" value="{{ _request_parameters.menuIndex }}">
+            <input type="hidden" name="submenuIndex" value="{{ _request_parameters.submenuIndex }}">
+            <div class="field-group col-xs-12 col-sm-12">
+                <div class="box box-default">
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label" for="company">Pilih Perusahaan</label>
+                                    <select id="company" name="company" class="static-select company-select">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-6">
+                                <div class="form-group">
+                                    <label class="control-label" for="year">Pilih Periode</label>
+                                    <div class="input-group input-daterange">
+                                        <select id="month" name="month" class="form-control static-select month" required="required">
+                                            {{ semarthris_month_options(app.request) | raw }}
+                                        </select>
+                                        <span class="input-group-addon"><i class="fa fa-exchange" aria-hidden="true"></i></span>
+                                        <select id="year" name="year" class="form-control static-select year" required="required">
+                                            {{  semarthris_year_options(6, app.request) | raw }}
+                                        </select>
+                                        <span class="input-group-btn">
+                                            <button name="filter" id="filter" class="btn btn-primary pull-right" type="submit">
+                                                <i class="fa fa-television"></i> {{ 'label.payroll.filter_action' | trans({}, 'messages') }}
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+            {% block table_head %}
+                {{ parent() }}
+            {% endblock table_head %}
+            </thead>
+
+            <tbody>
+            {% block table_body %}
+                {{ parent() }}
+            {% endblock table_body %}
+            </tbody>
+        </table>
+    </div>
+
+    {% block paginator %}
+        {{ parent() }}
+    {% endblock paginator %}
+
+    <div id="modal-process" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <h4>{{ 'delete_modal.title'|trans({}, 'EasyAdminBundle') }}</h4>
+                    <p>{{ 'semarthris.payroll.process_warning_content'|trans({}, 'messages') }}</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-dismiss="modal" class="btn">
+                        {{ 'action.cancel'|trans({}, 'messages') }}
+                    </button>
+                    <button type="button" data-dismiss="modal" class="btn btn-danger process-payroll">
+                        {{ 'label.payroll.process_action' | trans({}, 'messages') }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-after-process" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <h4>{{ 'delete_modal.title'|trans({}, 'EasyAdminBundle') }}</h4>
+                    <p class="fail-message">{{ 'semarthris.payroll.process_finish_content'|trans({}, 'messages') }}</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-dismiss="modal" class="btn btn-primary reload">
+                        {{ 'action.close'|trans({}, 'messages') }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock main %}
+
+{% block head_stylesheets %}
+    {{ parent() }}
+
+    <link rel="stylesheet" href="{{ asset('css/bootstrap-datepicker.min.css') }}">
+{% endblock %}
+
+{% block body_javascript %}
+    {{ parent() }}
+
+    <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
+    <script src="{{ asset('js/bootstrap-datepicker.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap-filestyle.min.js') }}"></script>
+    <script src="{{ asset('js/semart.js') }}"></script>
+
+    <script type="text/javascript">
+        $(function() {
+            var locale = '{{ _select2_locale }}';
+            var emptyText = '{{ 'label.form.empty_value' | trans({}, 'messages') }}';
+            var btnFile = '{{ 'label.form.file_chooser' | trans({}, 'messages') }}';
+
+            $(document).on('click', '.process', function () {
+               $('#modal-process').modal();
+            });
+
+            $(document).on('click', '.process-payroll', function () {
+                var company = $('#company').val();
+                var month = $('.month').val();
+                var year = $('.year').val();
+
+                $.ajax({
+                    url: Routing.generate('process_payroll'),
+                    type: 'POST',
+                    data: {
+                        company: company,
+                        month: month,
+                        year: year
+                    },
+                    beforeSend: function () {},
+                    success: function () {
+                        $('#modal-after-process').modal();
+                    },
+                    error: function (r) {
+                        var response = JSON.parse(r.responseText);
+                        $('.fail-message').html(response.message);
+                        $('#modal-after-process').modal();
+                    }
+                });
+            });
+
+            $(document).on('click', '.reload', function() {
+                window.location.reload(true);
+            });
+
+            change_static_select(locale);
+            date_range_picker(locale,  '{{ date_format_long }}');
+            company_autocomplete(emptyText, '{{ app.request.query.get('company') }}');
+        });
+    </script>
+{% endblock %}

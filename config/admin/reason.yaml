@@ -1,7 +1,7 @@
 easy_admin:
     entities:
         LeaveReason:
-            role: 'ROLE_HRSTAFF'
+            role: '%env(string:SEMART_SECURITY_LEAVE_MENU)%'
             class: 'KejawenLab\Application\SemartHris\Entity\Reason'
             controller: 'KejawenLab\Application\SemartHris\Controller\Admin\ReasonController'
             templates:
@@ -13,6 +13,7 @@ easy_admin:
                 title: 'Edit Alasan Cuti'
             search:
                 title: 'Alasan Cuti'
+                dql_filter: "entity.type = 'l'"
                 fields: ['code', 'name']
             form:
                 fields:
@@ -30,7 +31,7 @@ easy_admin:
                     - { property: 'code', label: 'Kode Alasan' }
                     - { property: 'name', label: 'Alasan' }
             list:
-                role: 'ROLE_HRSTAFF'
+                role: '%env(string:SEMART_SECURITY_LEAVE_MENU)%'
                 title: 'Alasan Cuti'
                 dql_filter: "entity.type = 'l'"
                 fields:
@@ -39,7 +40,7 @@ easy_admin:
                     - { property: 'name', label: 'Alasan' }
 
         AbsentReason:
-            role: 'ROLE_HRSTAFF'
+            role: '%env(string:SEMART_SECURITY_ATTENDANCE_MENU)%'
             class: 'KejawenLab\Application\SemartHris\Entity\Reason'
             controller: 'KejawenLab\Application\SemartHris\Controller\Admin\ReasonController'
             templates:
@@ -51,6 +52,7 @@ easy_admin:
                 title: 'Edit Alasan Ketidakhadiran'
             search:
                 title: 'Alasan Ketidakhadiran'
+                dql_filter: "entity.type = 'a'"
                 fields: ['code', 'name']
             form:
                 fields:
@@ -68,7 +70,7 @@ easy_admin:
                     - { property: 'code', label: 'Kode Alasan' }
                     - { property: 'name', label: 'Alasan' }
             list:
-                role: 'ROLE_HRSTAFF'
+                role: '%env(string:SEMART_SECURITY_ATTENDANCE_MENU)%'
                 title: 'Alasan Ketidakhadiran'
                 dql_filter: "entity.type = 'a'"
                 fields:

@@ -1,12 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KejawenLab\Application\SemartHris\Controller\Admin;
 
+use KejawenLab\Application\SemartHris\Component\Setting\Service\Setting;
+use KejawenLab\Application\SemartHris\Component\Setting\SettingKey;
 use KejawenLab\Application\SemartHris\Repository\WorkshiftRepository;
-use KejawenLab\Application\SemartHris\Util\Setting;
 
 /**
- * @author Muhamad Surya Iksanudin <surya.iksanudin@kejawenlab.com>
+ * @author Muhamad Surya Iksanudin <surya.iksanudin@gmail.com>
  */
 class WorkshiftController extends AdminController
 {
@@ -20,8 +23,19 @@ class WorkshiftController extends AdminController
      */
     protected function createListQueryBuilder($entityClass, $sortDirection, $sortField = null, $dqlFilter = null)
     {
-        $startDate = \DateTime::createFromFormat(Setting::get(Setting::DATE_FORMAT), $this->request->query->get('startDate', date(Setting::get(Setting::FIRST_DATE_FORMAT))));
-        $endDate = \DateTime::createFromFormat(Setting::get(Setting::DATE_FORMAT), $this->request->query->get('endDate', date(Setting::get(Setting::LAST_DATE_FORMAT))));
+        $setting = $this->container->get(Setting::class);
+        $startDate = $this->request->query->get('startDate');
+        if (!$startDate) {
+            $startDate = date($setting->get(SettingKey::FIRST_DATE_FORMAT));
+        }
+
+        $endDate = $this->request->query->get('endDate');
+        if (!$endDate) {
+            $endDate = date($setting->get(SettingKey::LAST_DATE_FORMAT));
+        }
+
+        $startDate = \DateTime::createFromFormat($setting->get(SettingKey::DATE_FORMAT), $startDate);
+        $endDate = \DateTime::createFromFormat($setting->get(SettingKey::DATE_FORMAT), $endDate);
         $companyId = $this->request->get('company');
         $departmentId = $this->request->get('department');
         $shiftmentId = $this->request->get('shiftment');

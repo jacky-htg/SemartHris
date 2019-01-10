@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KejawenLab\Application\SemartHris\Component\Contract\Model;
 
 /**
- * @author Muhamad Surya Iksanudin <surya.iksanudin@kejawenlab.com>
+ * @author Muhamad Surya Iksanudin <surya.iksanudin@gmail.com>
  */
 interface Contractable
 {
@@ -20,5 +22,5 @@ interface Contractable
     /**
      * @param ContractInterface|null $contract
      */
-    public function setContract(ContractInterface $contract = null): void;
+    public function setContract(?ContractInterface $contract): void;
 }

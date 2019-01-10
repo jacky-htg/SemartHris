@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KejawenLab\Application\SemartHris\Component\Employee\Model;
 
 use KejawenLab\Application\SemartHris\Component\Reason\Model\ReasonInterface;
 
 /**
- * @author Muhamad Surya Iksanudin <surya.iksanudin@kejawenlab.com>
+ * @author Muhamad Surya Iksanudin <surya.iksanudin@gmail.com>
  */
 interface ResignInterface
 {
@@ -22,7 +24,7 @@ interface ResignInterface
     /**
      * @param EmployeeInterface $employee
      */
-    public function setEmployee(EmployeeInterface $employee = null): void;
+    public function setEmployee(?EmployeeInterface $employee): void;
 
     /**
      * @return \DateTime
@@ -42,7 +44,7 @@ interface ResignInterface
     /**
      * @param ReasonInterface $reason
      */
-    public function setReason(ReasonInterface $reason = null): void;
+    public function setReason(?ReasonInterface $reason): void;
 
     /**
      * @return string
@@ -52,5 +54,5 @@ interface ResignInterface
     /**
      * @param string $remark
      */
-    public function setDescription(string $remark = null): void;
+    public function setDescription(?string $remark): void;
 }

@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KejawenLab\Application\SemartHris\Component\Address\Model;
 
 /**
- * @author Muhamad Surya Iksanudin <surya.iksanudin@kejawenlab.com>
+ * @author Muhamad Surya Iksanudin <surya.iksanudin@gmail.com>
  */
 interface Addressable
 {
@@ -15,5 +17,5 @@ interface Addressable
     /**
      * @param AddressInterface|null $address
      */
-    public function setAddress(AddressInterface $address = null): void;
+    public function setAddress(?AddressInterface $address): void;
 }

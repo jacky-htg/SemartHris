@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KejawenLab\Application\SemartHris\Component\Company\Model;
 
 use KejawenLab\Application\SemartHris\Component\Address\Model\Addressable;
 
 /**
- * @author Muhamad Surya Iksanudin <surya.iksanudin@kejawenlab.com>
+ * @author Muhamad Surya Iksanudin <surya.iksanudin@gmail.com>
  */
 interface CompanyInterface extends Addressable
 {
@@ -17,12 +19,12 @@ interface CompanyInterface extends Addressable
     /**
      * @return null|CompanyInterface
      */
-    public function getParent(): ? CompanyInterface;
+    public function getParent(): ? self;
 
     /**
      * @param CompanyInterface $company
      */
-    public function setParent(CompanyInterface $company = null): void;
+    public function setParent(?self $company): void;
 
     /**
      * @return string

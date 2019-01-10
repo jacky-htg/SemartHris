@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KejawenLab\Application\SemartHris\Component\Contract\Service;
 
 use KejawenLab\Application\SemartHris\Component\Contract\Model\Contractable;
@@ -8,7 +10,7 @@ use KejawenLab\Application\SemartHris\Component\Contract\Repository\Contractable
 use KejawenLab\Application\SemartHris\Component\Contract\Repository\ContractRepositoryInterface;
 
 /**
- * @author Muhamad Surya Iksanudin <surya.iksanudin@kejawenlab.com>
+ * @author Muhamad Surya Iksanudin <surya.iksanudin@gmail.com>
  */
 class CheckContract
 {
@@ -42,16 +44,22 @@ class CheckContract
         $count = 0;
         $repositories = $this->contractableRepositoryFactory->getRepositories();
         foreach ($repositories as $repository) {
-            if ($exists = $repository->findByContract($contractable->getContract())) {
-                foreach ($exists as $exist) {
-                    if ($contractable->getId()) {
-                        if ($exist->getContract()->getId() !== $contractable->getContract()->getId()) {
-                            ++$count;
-                        }
-                    } else {
-                        if ($exist->getContract()->getId() === $contractable->getContract()->getId()) {
-                            ++$count;
-                        }
+            if (!$contractable->getContract()) {
+                continue;
+            }
+
+            if (!$exists = $repository->findByContract($contractable->getContract())) {
+                continue;
+            }
+
+            foreach ($exists as $exist) {
+                if ($contractable->getId()) {
+                    if ($exist->getContract()->getId() !== $contractable->getContract()->getId()) {
+                        ++$count;
+                    }
+                } else {
+                    if ($exist->getContract()->getId() === $contractable->getContract()->getId()) {
+                        ++$count;
                     }
                 }
             }

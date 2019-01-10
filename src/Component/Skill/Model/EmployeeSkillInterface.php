@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KejawenLab\Application\SemartHris\Component\Skill\Model;
 
 use KejawenLab\Application\SemartHris\Component\Employee\Model\EmployeeInterface;
 use KejawenLab\Application\SemartHris\Component\Skill\SkillLevel;
 
 /**
- * @author Muhamad Surya Iksanudin <surya.iksanudin@kejawenlab.com>
+ * @author Muhamad Surya Iksanudin <surya.iksanudin@gmail.com>
  */
 interface EmployeeSkillInterface
 {
@@ -23,7 +25,7 @@ interface EmployeeSkillInterface
     /**
      * @param EmployeeInterface|null $employee
      */
-    public function setEmployee(EmployeeInterface $employee = null): void;
+    public function setEmployee(?EmployeeInterface $employee): void;
 
     /**
      * @return null|SkillInterface
@@ -33,7 +35,7 @@ interface EmployeeSkillInterface
     /**
      * @param SkillInterface|null $skill
      */
-    public function setSkill(SkillInterface $skill = null): void;
+    public function setSkill(?SkillInterface $skill): void;
 
     /**
      * @return string

@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KejawenLab\Application\SemartHris\Component\Job\Repository;
 
 use KejawenLab\Application\SemartHris\Component\Job\Model\JobLevelInterface;
 
 /**
- * @author Muhamad Surya Iksanudin <surya.iksanudin@kejawenlab.com>
+ * @author Muhamad Surya Iksanudin <surya.iksanudin@gmail.com>
  */
 interface JobLevelRepositoryInterface
 {
@@ -14,5 +16,5 @@ interface JobLevelRepositoryInterface
      *
      * @return JobLevelInterface
      */
-    public function find(string $id): ? JobLevelInterface;
+    public function find(?string $id): ? JobLevelInterface;
 }

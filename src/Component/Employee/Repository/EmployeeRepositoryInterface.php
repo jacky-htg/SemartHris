@@ -1,11 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KejawenLab\Application\SemartHris\Component\Employee\Repository;
 
 use KejawenLab\Application\SemartHris\Component\Employee\Model\EmployeeInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @author Muhamad Surya Iksanudin <surya.iksanudin@kejawenlab.com>
+ * @author Muhamad Surya Iksanudin <surya.iksanudin@gmail.com>
  */
 interface EmployeeRepositoryInterface
 {
@@ -14,7 +17,7 @@ interface EmployeeRepositoryInterface
      *
      * @return EmployeeInterface
      */
-    public function find(string $id): ? EmployeeInterface;
+    public function find(?string $id): ? EmployeeInterface;
 
     /**
      * @param array $ids
@@ -31,11 +34,25 @@ interface EmployeeRepositoryInterface
     public function findSupervisorByJobLevel(string $jobLevelId): array;
 
     /**
+     * @param string $companyId
+     *
+     * @return array
+     */
+    public function findByCompany(string $companyId): array;
+
+    /**
      * @param string $code
      *
      * @return EmployeeInterface|null
      */
     public function findByCode(string $code): ? EmployeeInterface;
+
+    /**
+     * @param Request $request
+     *
+     * @return array
+     */
+    public function search(Request $request): array;
 
     /**
      * @return EmployeeInterface[]

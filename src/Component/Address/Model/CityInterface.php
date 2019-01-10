@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KejawenLab\Application\SemartHris\Component\Address\Model;
 
 /**
- * @author Muhamad Surya Iksanudin <surya.iksanudin@kejawenlab.com>
+ * @author Muhamad Surya Iksanudin <surya.iksanudin@gmail.com>
  */
 interface CityInterface
 {
@@ -20,7 +22,7 @@ interface CityInterface
     /**
      * @param RegionInterface|null $region
      */
-    public function setRegion(RegionInterface $region = null): void;
+    public function setRegion(?RegionInterface $region): void;
 
     /**
      * @return string

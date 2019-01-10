@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KejawenLab\Application\SemartHris\EventListener;
 
 use Doctrine\Common\EventSubscriber;
@@ -9,7 +11,7 @@ use KejawenLab\Application\SemartHris\Component\Job\Model\CareerHistoryable;
 use KejawenLab\Application\SemartHris\Component\Job\Service\AddCareerHistory;
 
 /**
- * @author Muhamad Surya Iksanudin <surya.iksanudin@kejawenlab.com>
+ * @author Muhamad Surya Iksanudin <surya.iksanudin@gmail.com>
  */
 class AddCareerHistorySubscriber implements EventSubscriber
 {

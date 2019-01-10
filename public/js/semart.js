@@ -268,12 +268,20 @@ function tags_autocomplete(locale) {
             url: Routing.generate('contract_tags'),
             data: function (params) {
                 return {
-                    search: params.term
+                    search: params.term.toUpperCase()
                 };
             },
             processResults: function (data) {
+                var results = [];
+                $.each(data.tags, function (idx, val) {
+                    results.push({
+                        id: val,
+                        text: val
+                    });
+                });
+
                 return {
-                    results: data.tags
+                    results: results
                 };
             }
         }
@@ -282,7 +290,9 @@ function tags_autocomplete(locale) {
     if (0 < tags.length) {
         var options = '';
         $.each(tags, function (idx, val) {
-            options += '<option value="' + val + '" selected="selected">' + val + '</option>';
+            if ('' !== val) {
+                options += '<option value="' + val + '" selected="selected">' + val + '</option>';
+            }
         });
 
         tagsSelect.html(options);
@@ -292,6 +302,70 @@ function tags_autocomplete(locale) {
 
     $(document).on('change', '.tags-select', function () {
         tagsId.val($(this).val());
+    });
+}
+
+function employee_search(locale) {
+    var employeeSelect = $('.employee-search');
+
+    employeeSelect.select2({
+        minimumInputLength: 2,
+        theme: 'bootstrap',
+        language: locale,
+        cache: true,
+        ajax: {
+            url: Routing.generate('employee_search'),
+            data: function (params) {
+                return {
+                    search: params.term.toUpperCase()
+                };
+            },
+            processResults: function (data) {
+                var results = [];
+                $.each(data.employees, function (idx, val) {
+                    results.push({
+                        id: val.id,
+                        text: val.code + ' - ' + val.fullName
+                    });
+                });
+
+                return {
+                    results: results
+                };
+            }
+        }
+    });
+}
+
+function region_search(locale) {
+    var regionSelect = $('.region-search');
+
+    regionSelect.select2({
+        minimumInputLength: 2,
+        theme: 'bootstrap',
+        language: locale,
+        cache: true,
+        ajax: {
+            url: Routing.generate('region_search'),
+            data: function (params) {
+                return {
+                    search: params.term.toUpperCase()
+                };
+            },
+            processResults: function (data) {
+                var results = [];
+                $.each(data.regions, function (idx, val) {
+                    results.push({
+                        id: val.id,
+                        text: val.code + ' - ' + val.name
+                    });
+                });
+
+                return {
+                    results: results
+                };
+            }
+        }
     });
 }
 
@@ -331,6 +405,80 @@ function employee_contract_autocomplete(locale, emptyText) {
     });
 }
 
+function fixed_component_autocomplete(locale, emptyText) {
+    var componentSelect = $('.component-select');
+
+    $.ajax({
+        url: Routing.generate('fixed_component'),
+        type: 'GET',
+        data: {},
+        beforeSend: function () {},
+        success: function (dataResponse) {
+            var componentId = $('.component-id').val();
+            var options = '<option value="">' + emptyText + '</option>';
+
+            $.each(dataResponse['components'], function (idx, val) {
+                if (componentId === val.id) {
+                    options += '<option value="' + val.id + '" selected="selected">' + val.code + ' - ' + val.name + '</option>';
+                } else {
+                    options += '<option value="' + val.id + '">' + val.code + ' - ' + val.name + '</option>';
+                }
+            });
+
+            componentSelect.html(options);
+            componentSelect.select2({
+                theme: 'bootstrap',
+                language: locale
+            });
+        },
+        error: function () {
+            console.log('KO');
+        }
+    });
+
+    $(document).on('change', '.component-select', function () {
+        $('.component-id').val($(this).val());
+    });
+}
+
+
+function salary_component_autocomplete(state, locale, emptyText) {
+    var componentSelect = $('.component-select');
+
+    $.ajax({
+        url: Routing.generate('salary_component'),
+        type: 'GET',
+        data: {
+            state: state
+        },
+        beforeSend: function () {},
+        success: function (dataResponse) {
+            var componentId = $('.component-id').val();
+            var options = '<option value="">' + emptyText + '</option>';
+
+            $.each(dataResponse['components'], function (idx, val) {
+                if (componentId === val.id) {
+                    options += '<option value="' + val.id + '" selected="selected">' + val.code + ' - ' + val.name + '</option>';
+                } else {
+                    options += '<option value="' + val.id + '">' + val.code + ' - ' + val.name + '</option>';
+                }
+            });
+
+            componentSelect.html(options);
+            componentSelect.select2({
+                theme: 'bootstrap',
+                language: locale
+            });
+        },
+        error: function () {
+            console.log('KO');
+        }
+    });
+
+    $(document).on('change', '.component-select', function () {
+        $('.component-id').val($(this).val());
+    });
+}
 
 function reason_autocomplete(locale, type, emptyText) {
     var reasonSelect = $('.reason-select');
@@ -365,6 +513,25 @@ function reason_autocomplete(locale, type, emptyText) {
 
     $(document).on('change', '.reason-select', function () {
         $('.reason-id').val($(this).val());
+    });
+}
+
+function find_employee(id) {
+    $.ajax({
+        url: Routing.generate('employee_get_for_tax_change', { id: id }),
+        type: 'GET',
+        data: {},
+        beforeSend: function () {},
+        success: function (dataResponse) {
+            var employee = dataResponse['employee'];
+            if (null !== employee) {
+                $('.tax-group').val(employee.tax_group);
+                $('.risk-ratio').val(employee.risk_ratio);
+            }
+        },
+        error: function () {
+            console.log('KO');
+        }
     });
 }
 
@@ -427,6 +594,14 @@ function createDate(input, format) {
     format.replace(/(yyyy|dd|mm)/g, function(part) { fmt[part] = i++; });
 
     return new Date(parts[fmt['yyyy']], parts[fmt['mm']]-1, parts[fmt['dd']]);
+}
+
+function __numeric() {
+    $('.numeric').numeric();
+}
+
+function __positive() {
+    $('.positive').numeric({ negative: false }, function() { this.value = ''; this.focus(); });
 }
 
 Array.prototype.unique = function() {

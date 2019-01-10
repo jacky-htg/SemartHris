@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KejawenLab\Application\SemartHris\Component\Skill\Model;
 
 /**
- * @author Muhamad Surya Iksanudin <surya.iksanudin@kejawenlab.com>
+ * @author Muhamad Surya Iksanudin <surya.iksanudin@gmail.com>
  */
 interface SkillGroupInterface
 {
@@ -15,12 +17,12 @@ interface SkillGroupInterface
     /**
      * @return null|SkillGroupInterface
      */
-    public function getParent(): ? SkillGroupInterface;
+    public function getParent(): ? self;
 
     /**
      * @param SkillGroupInterface|null $group
      */
-    public function setParent(SkillGroupInterface $group = null): void;
+    public function setParent(?self $group): void;
 
     /**
      * @return string

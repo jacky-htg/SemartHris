@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KejawenLab\Application\SemartHris\Component\Job\Service;
 
 use KejawenLab\Application\SemartHris\Component\Contract\Model\Contractable;
@@ -11,7 +13,7 @@ use KejawenLab\Application\SemartHris\Component\Job\Model\PlacementInterface;
 use KejawenLab\Application\SemartHris\Component\Job\Repository\CareerHistoryRepositoryInterface;
 
 /**
- * @author Muhamad Surya Iksanudin <surya.iksanudin@kejawenlab.com>
+ * @author Muhamad Surya Iksanudin <surya.iksanudin@gmail.com>
  */
 class AddCareerHistory
 {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KejawenLab\Application\SemartHris\Controller\Front;
 
 use KejawenLab\Application\SemartHris\Util\FileUtil;
@@ -11,7 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * @author Muhamad Surya Iksanudin <surya.iksanudin@kejawenlab.com>
+ * @author Muhamad Surya Iksanudin <surya.iksanudin@gmail.com>
  */
 class FileController extends Controller
 {
@@ -39,7 +41,6 @@ class FileController extends Controller
                 $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', date('Y_m_d_H_i_s')));
             }
 
-            $response->sendHeaders();
             $response->setContent($file);
 
             return $response;

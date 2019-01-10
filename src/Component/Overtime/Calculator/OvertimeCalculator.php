@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KejawenLab\Application\SemartHris\Component\Overtime\Calculator;
 
-use KejawenLab\Application\SemartHris\Component\Overtime\Model\OvertimeCalculatorInterface;
 use KejawenLab\Application\SemartHris\Component\Overtime\Model\OvertimeInterface;
 
 /**
- * @author Muhamad Surya Iksanudin <surya.iksanudin@kejawenlab.com>
+ * @author Muhamad Surya Iksanudin <surya.iksanudin@gmail.com>
  */
 class OvertimeCalculator extends Calculator implements OvertimeCalculatorInterface
 {
@@ -22,6 +23,7 @@ class OvertimeCalculator extends Calculator implements OvertimeCalculatorInterfa
      */
     public function __construct(array $calculators = [])
     {
+        $this->calculators = [];
         foreach ($calculators as $calculator) {
             $this->addCalculator($calculator);
         }
@@ -35,6 +37,7 @@ class OvertimeCalculator extends Calculator implements OvertimeCalculatorInterfa
         foreach ($this->calculators as $calculator) {
             try {
                 $calculator->setWorkdayPerWeek($this->workday);
+                $calculator->setSetingg($this->setting);
                 $calculator->calculate($overtime);
             } catch (CalculatorException $exception) {
                 continue;

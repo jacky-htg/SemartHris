@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KejawenLab\Application\SemartHris\Component\Job\Model;
 
 use KejawenLab\Application\SemartHris\Component\Company\Model\CompanyInterface;
@@ -8,7 +10,7 @@ use KejawenLab\Application\SemartHris\Component\Contract\Model\ContractInterface
 use KejawenLab\Application\SemartHris\Component\Employee\Model\EmployeeInterface;
 
 /**
- * @author Muhamad Surya Iksanudin <surya.iksanudin@kejawenlab.com>
+ * @author Muhamad Surya Iksanudin <surya.iksanudin@gmail.com>
  */
 interface CareerHistoryInterface
 {
@@ -25,7 +27,7 @@ interface CareerHistoryInterface
     /**
      * @param EmployeeInterface|null $employee
      */
-    public function setEmployee(EmployeeInterface $employee = null): void;
+    public function setEmployee(?EmployeeInterface $employee): void;
 
     /**
      * @return null|CompanyInterface
@@ -35,7 +37,7 @@ interface CareerHistoryInterface
     /**
      * @param CompanyInterface $company
      */
-    public function setCompany(CompanyInterface $company = null): void;
+    public function setCompany(?CompanyInterface $company): void;
 
     /**
      * @return null|DepartmentInterface
@@ -45,7 +47,7 @@ interface CareerHistoryInterface
     /**
      * @param DepartmentInterface $department
      */
-    public function setDepartment(DepartmentInterface $department = null): void;
+    public function setDepartment(?DepartmentInterface $department): void;
 
     /**
      * @return null|JobLevelInterface
@@ -55,7 +57,7 @@ interface CareerHistoryInterface
     /**
      * @param JobLevelInterface $jobLevel
      */
-    public function setJobLevel(JobLevelInterface $jobLevel = null): void;
+    public function setJobLevel(?JobLevelInterface $jobLevel): void;
 
     /**
      * @return null|JobTitleInterface
@@ -65,7 +67,7 @@ interface CareerHistoryInterface
     /**
      * @param JobTitleInterface $jobTitle
      */
-    public function setJobTitle(JobTitleInterface $jobTitle = null): void;
+    public function setJobTitle(?JobTitleInterface $jobTitle): void;
 
     /**
      * @return null|EmployeeInterface
@@ -75,7 +77,7 @@ interface CareerHistoryInterface
     /**
      * @param EmployeeInterface|null $employee
      */
-    public function setSupervisor(EmployeeInterface $employee = null): void;
+    public function setSupervisor(?EmployeeInterface $employee): void;
 
     /**
      * @return ContractInterface|null
@@ -85,7 +87,7 @@ interface CareerHistoryInterface
     /**
      * @param ContractInterface|null $contract
      */
-    public function setContract(ContractInterface $contract = null): void;
+    public function setContract(?ContractInterface $contract): void;
 
     /**
      * @return null|string
@@ -93,7 +95,7 @@ interface CareerHistoryInterface
     public function getDescription(): ? string;
 
     /**
-     * @param string $description
+     * @param null|string $description
      */
-    public function setDescription(string $description): void;
+    public function setDescription(?string $description): void;
 }

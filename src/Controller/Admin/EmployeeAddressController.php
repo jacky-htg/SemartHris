@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KejawenLab\Application\SemartHris\Controller\Admin;
 
 use Doctrine\ORM\QueryBuilder;
@@ -13,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @author Muhamad Surya Iksanudin <surya.iksanudin@kejawenlab.com>
+ * @author Muhamad Surya Iksanudin <surya.iksanudin@gmail.com>
  */
 class EmployeeAddressController extends AdminController
 {
@@ -32,12 +34,12 @@ class EmployeeAddressController extends AdminController
             $session->set('employeeId', $employee->getId());
         }
 
-        return $this->redirectToRoute('easyadmin', array(
+        return $this->redirectToRoute('easyadmin', [
             'action' => 'list',
             'sortField' => 'defaultAddress',
             'sortDirection' => 'DESC',
             'entity' => 'EmployeeAddress',
-        ));
+        ]);
     }
 
     /**
@@ -47,7 +49,7 @@ class EmployeeAddressController extends AdminController
     {
         $response = parent::editAction();
 
-        $employeeAddress = $this->container->get(EmployeeRepository::class)->findEmployeeAddress($this->request->query->get('id'));
+        $employeeAddress = $this->container->get(EmployeeRepository::class)->findAddress($this->request->query->get('id'));
         if ($employeeAddress) {
             $this->container->get(DefaultAddressChecker::class)->unsetDefaultExcept($employeeAddress);
         }
@@ -60,7 +62,7 @@ class EmployeeAddressController extends AdminController
      */
     protected function deleteAction()
     {
-        $employeeAddress = $this->container->get(EmployeeRepository::class)->findEmployeeAddress($this->request->query->get('id'));
+        $employeeAddress = $this->container->get(EmployeeRepository::class)->findAddress($this->request->query->get('id'));
         if ($employeeAddress && 'DELETE' === $this->request->getMethod()) {
             $this->container->get(DefaultAddressChecker::class)->setRandomDefault($employeeAddress);
         }
@@ -104,7 +106,7 @@ class EmployeeAddressController extends AdminController
      */
     protected function createListQueryBuilder($entityClass, $sortDirection, $sortField = null, $dqlFilter = null)
     {
-        return $this->container->get(EmployeeRepository::class)->createEmployeeAddressQueryBuilder($sortField, $sortDirection, $dqlFilter, null !== $this->get('session')->get('employeeId'));
+        return $this->container->get(EmployeeRepository::class)->createAddressQueryBuilder($sortField, $sortDirection, $dqlFilter, null !== $this->get('session')->get('employeeId'));
     }
 
     /**
@@ -119,6 +121,6 @@ class EmployeeAddressController extends AdminController
      */
     protected function createSearchQueryBuilder($entityClass, $searchQuery, array $searchableFields, $sortField = null, $sortDirection = null, $dqlFilter = null)
     {
-        return $this->container->get(EmployeeRepository::class)->createSearchEmployeeAddressQueryBuilder($searchQuery, $sortField, $sortDirection, $dqlFilter, null !== $this->get('session')->get('employeeId'));
+        return $this->container->get(EmployeeRepository::class)->createSearchAddressQueryBuilder($searchQuery, $sortField, $sortDirection, $dqlFilter, null !== $this->get('session')->get('employeeId'));
     }
 }

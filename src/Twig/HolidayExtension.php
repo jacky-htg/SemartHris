@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KejawenLab\Application\SemartHris\Twig;
 
 use KejawenLab\Application\SemartHris\Component\Holiday\Repository\HolidayRepositoryInterface;
 
 /**
- * @author Muhamad Surya Iksanudin <surya.iksanudin@kejawenlab.com>
+ * @author Muhamad Surya Iksanudin <surya.iksanudin@gmail.com>
  */
 class HolidayExtension extends \Twig_Extension
 {
@@ -27,11 +29,11 @@ class HolidayExtension extends \Twig_Extension
      */
     public function getFunctions(): array
     {
-        return array(
-            new \Twig_SimpleFunction('semarthris_is_holiday', array($this, 'isHoliday')),
-            new \Twig_SimpleFunction('semarthris_holiday', array($this, 'getHoliday')),
-            new \Twig_SimpleFunction('semarthris_is_weekend_holiday', array($this, 'isWeekendHoliday')),
-        );
+        return [
+            new \Twig_SimpleFunction('semarthris_is_holiday', [$this, 'isHoliday']),
+            new \Twig_SimpleFunction('semarthris_holiday', [$this, 'getHoliday']),
+            new \Twig_SimpleFunction('semarthris_is_weekend_holiday', [$this, 'isWeekendHoliday']),
+        ];
     }
 
     /**

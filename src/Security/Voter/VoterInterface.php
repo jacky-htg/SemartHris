@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace KejawenLab\Application\SemartHris\Security\Voter;
 
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface as BaseVoter;
 
 /**
- * @author Muhamad Surya Iksanudin <surya.iksanudin@kejawenlab.com>
+ * @author Muhamad Surya Iksanudin <surya.iksanudin@gmail.com>
  */
 interface VoterInterface extends BaseVoter
 {
